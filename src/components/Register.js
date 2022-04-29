@@ -68,12 +68,12 @@ const OweetFactory = ({ userObj }) => {
         placeholder="What's on yout mind?"
         maxLength={120}
       />
-      {/* <input type="file" accept="image/*" onChange={onFileChange} />
-      <input type="submit" value="submit" /> */}
+      <input type="file" accept="image/*" onChange={onFileChange} />
+      <input type="submit" value="submit" />
       {attachment && (
         <div>
           <img src={attachment} width="50px" height="50px" />
-          <button onClick={onClearAttachment}>Clear</button>
+          <button onClick={onaClearAttachment}>Clear</button>
         </div>
       )}
     </form>
