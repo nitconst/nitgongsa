@@ -80,4 +80,6 @@ const OweetFactory = ({ userObj }) => {
   );
 };
 
+let a = 1;
+
 export default OweetFactory;
