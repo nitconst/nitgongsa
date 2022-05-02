@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 
-const OweetFactory = ({ userObj }) => {
+const Register = ({ userObj }) => {
   const [attachment, setAttachment] = useState("");
   const [oweet, setOweet] = useState("");
   const onSubmit = async (event) => {
@@ -60,26 +60,33 @@ const OweetFactory = ({ userObj }) => {
   };
   const onClearAttachment = () => setAttachment("");
   return (
-    <form onSubmit={onSubmit}>
-      <input
-        value={oweet}
-        onChange={onChange}
-        type="text"
-        placeholder="What's on yout mind?"
-        maxLength={120}
-      />
-      <input type="file" accept="image/*" onChange={onFileChange} />
-      <input type="submit" value="submit" />
-      {attachment && (
-        <div>
-          <img src={attachment} width="50px" height="50px" />
-          <button onClick={onClearAttachment}>Clear</button>
-        </div>
-      )}
-    </form>
+    <>
+      <h2>민정씨 Component</h2>
+      <form onSubmit={onSubmit}>
+        <input
+          value={oweet}
+          onChange={onChange}
+          type="text"
+          placeholder="What's on yout mind?"
+          maxLength={120}
+        />
+        <input type="file" accept="image/*" onChange={onFileChange} />
+        <input type="submit" value="submit" />
+        {attachment && (
+          <div>
+            <img src={attachment} width="50px" height="50px" />
+            <button onClick={onClearAttachment}>Clear</button>
+          </div>
+        )}
+      </form>
+    </>
   );
 };
 
+<<<<<<< HEAD
 let a = 1;
 
 export default OweetFactory;
+=======
+export default Register;
+>>>>>>> 16976eaa05dd184e2fcb63f2c83309b956cfb310
