@@ -6,16 +6,11 @@ import { ref, uploadString, getDownloadURL } from "firebase/storage";
 
 const Register = ({ userObj }) => {
   const [attachment, setAttachment] = useState("");
-  const [oweet, setOweet] = useState("");
+  const [gongsa, setgongsa] = useState("");
   const onSubmit = async (event) => {
     event.preventDefault();
     let attachmentURL = "";
-    // await addDoc(collection(dbService, "oweets"), {
-    //   text: oweet,
-    //   createdAt: serverTimestamp(),
-    //   creatorId: userObj.uid,
-    // });
-    // setOweet("");
+    
     if (attachment !== "") {
       const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
       const response = await uploadString(
@@ -26,21 +21,21 @@ const Register = ({ userObj }) => {
       attachmentURL = await getDownloadURL(response.ref);
     }
 
-    const oweetObj = {
-      text: oweet,
+    const gongsaObj = {
+      text: gongsa,
       createdAt: Date.now(), //등록 시간, 사진 메타데이터 접근
       creatorId: userObj.uid,
       attachmentURL,
     };
-    await addDoc(collection(dbService, "oweets"), oweetObj);
-    setOweet("");
+    await addDoc(collection(dbService, "gongsa"), gongsaObj);
+    setgongsa("");
     setAttachment("");
   };
   const onChange = (event) => {
     const {
       target: { value },
     } = event;
-    setOweet(value);
+    setgongsa(value);
   };
   const onFileChange = (event) => {
     const {
@@ -64,11 +59,10 @@ const Register = ({ userObj }) => {
       <h2>민정씨 Component</h2>
       <form onSubmit={onSubmit}>
         <input
-          value={oweet}
+          value={gongsa}
           onChange={onChange}
           type="text"
-          placeholder="What's on yout mind?"
-          maxLength={120}
+          placeholder="공사 정보 입력"
         />
         <input type="file" accept="image/*" onChange={onFileChange} />
         <input type="submit" value="submit" />
@@ -83,10 +77,4 @@ const Register = ({ userObj }) => {
   );
 };
 
-<<<<<<< HEAD
-let a = 1;
-
-export default OweetFactory;
-=======
 export default Register;
->>>>>>> 16976eaa05dd184e2fcb63f2c83309b956cfb310
