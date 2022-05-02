@@ -29,8 +29,7 @@ const Home = () => {
     
     <div>
     {/* <Register/> //내용 옮기기
-    <ReadGongsa/> */}
-    
+    <ReadGongsa/> */} 
   <form onSubmit={onSubmit}>
     <input value={gongsa} onChange={onChange} type="text" placeholder="공사 내용 입력"/>
     <input type="submit" value="제출"/>

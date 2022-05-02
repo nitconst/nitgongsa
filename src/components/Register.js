@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 
-const OweetFactory = ({ userObj }) => {
+const Register = ({ userObj }) => {
   const [attachment, setAttachment] = useState("");
   const [oweet, setOweet] = useState("");
   const onSubmit = async (event) => {
@@ -32,7 +32,9 @@ const OweetFactory = ({ userObj }) => {
       creatorId: userObj.uid,
       attachmentURL,
     };
-    await addDoc(collection(dbService, "oweets"), oweetObj);
+
+    
+    await addDoc(collection(dbService, "gongsa"), oweetObj);
     setOweet("");
     setAttachment("");
   };
@@ -62,14 +64,14 @@ const OweetFactory = ({ userObj }) => {
   return (
     <form onSubmit={onSubmit}>
       <input
-        value={oweet}
+        value={gongsa}
         onChange={onChange}
         type="text"
-        placeholder="What's on yout mind?"
-        maxLength={120}
+        placeholder="공사 내용 입력"
       />
+
       <input type="file" accept="image/*" onChange={onFileChange} />
-      <input type="submit" value="submit" />
+      <input type="submit" value="제출" />
       {attachment && (
         <div>
           <img src={attachment} width="50px" height="50px" />
