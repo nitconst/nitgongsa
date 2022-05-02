@@ -38,7 +38,10 @@ export default function AppRouter({ isLoggedIn, userObj, refreshUser }) {
               <Route path="*" element={<Navigate replace to="/" />} />
             </>
           ) : (
-            <Route exact path="/" element={<Auth />} />
+            <>
+              <Route exact path="/" element={<Auth />} />
+              <Route path="*" element={<Navigate replace to="/" />} />
+            </>
           )}
         </Routes>
       </Router>

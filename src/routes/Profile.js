@@ -13,9 +13,7 @@ const Profile = ({ userObj }) => {
         <label>{newDisplayName}</label>
       </div>
 
-      <span className="formBtn cancelBtn logOut" onClick={onLogOutClick}>
-        Log Out
-      </span>
+      <button onClick={onLogOutClick}>Log Out</button>
     </div>
   );
 };
