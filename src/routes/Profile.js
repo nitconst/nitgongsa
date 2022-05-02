@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { authService } from "../fbase";
+import { authService } from "fbase";
 
 const Profile = ({ userObj }) => {
   console.log(userObj);
@@ -13,9 +13,7 @@ const Profile = ({ userObj }) => {
         <label>{newDisplayName}</label>
       </div>
 
-      <span className="formBtn cancelBtn logOut" onClick={onLogOutClick}>
-        Log Out
-      </span>
+      <button onClick={onLogOutClick}>Log Out</button>
     </div>
   );
 };
