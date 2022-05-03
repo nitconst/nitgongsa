@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { dbService } from "fbase";
-import { collection, addDoc,  query, onSnapshot, orderBy } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  query,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
 import Register from "components/Register";
 import ReadGongsa from "components/ReadGongsa";
 
-const Home = ({userObj}) => {
+const Home = ({ userObj }) => {
   const [gongsa, setGongsa] = useState([]);
-  
+
   useEffect(() => {
     const q = query(
       collection(dbService, "gongsa"), //gongsa(collection name)
@@ -23,7 +29,7 @@ const Home = ({userObj}) => {
 
   return (
     <div>
-      <Register userObj={userObj}/>
+      <Register userObj={userObj} />
       <ReadGongsa />
     </div>
   );
