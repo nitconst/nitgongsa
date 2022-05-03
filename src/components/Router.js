@@ -24,7 +24,7 @@ export default function AppRouter({ isLoggedIn, userObj, refreshUser }) {
           {isLoggedIn ? (
             <>
               <Route path="/" element={<Navigation />}>
-                <Route index element={<Home />} />
+                <Route index element={<Home userObj={userObj} />} />
                 <Route
                   path="profile"
                   element={
@@ -38,7 +38,10 @@ export default function AppRouter({ isLoggedIn, userObj, refreshUser }) {
               <Route path="*" element={<Navigate replace to="/" />} />
             </>
           ) : (
-            <Route exact path="/" element={<Auth />} />
+            <>
+              <Route exact path="/" element={<Auth />} />
+              <Route path="*" element={<Navigate replace to="/" />} />
+            </>
           )}
         </Routes>
       </Router>
