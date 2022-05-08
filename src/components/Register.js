@@ -40,10 +40,11 @@ const Register = ({ userObj }) => {
 
     const gongsaObj = {
       text: gongsa,
-      createdAt: meta.exifdata.DateTime,
+      createdAt: date,
       createdId: userObj.uid,
       attachmentUrl,
-      // phoneNumber,
+      code: 0,
+      // 필드 태그 수정 필요(Ex. phoneNumber, addr(geocode) .. etc)
     };
     await addDoc(collection(dbService, "gongsa"), gongsaObj);
     setGongsa("");
@@ -70,6 +71,7 @@ const Register = ({ userObj }) => {
       setAttachment(result);
     };
     reader.readAsDataURL(theFile);
+    meta.current = theFile;
     //메타데이터 console
     if (theFile && theFile.name) {
       EXIF.getData(theFile, function () {
@@ -121,13 +123,6 @@ const Register = ({ userObj }) => {
                 (-60 * parseInt(long[1]) + -1 * parseFloat(long[2])) / 3600
             );
           }
-
-          // meta.current = theFile;
-          // const metaArray = [];
-
-          // // for (const element of meta.current.exifdata.GPSLongitude) {
-          // //   metaArray.push(parseFloat(Object.values(element)[0]));
-          // //   console.log(metaArray);
         } else {
           console.log("No EXIF data found in image '" + theFile.name + "'.");
         }
