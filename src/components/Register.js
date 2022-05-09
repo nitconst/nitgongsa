@@ -6,7 +6,7 @@ import EXIF from "exif-js";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import Geocode from "react-geocode";
 
-Geocode.setApiKey(process.env.REACT_APP_GOOGLE_API_KEY);
+Geocode.setApiKey("AIzaSyBIWmLYzIJmYLxLoRsHchr0OAErLWpKcyI");
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
 Geocode.enableDebug();
@@ -20,8 +20,8 @@ const Register = ({ userObj }) => {
   const [date, setDate] = useState("");
   const [GPSla, setGPSLa] = useState([]); //위도
   const [GPSlong, setGPSLong] = useState([]); //경도
+  const [address, setAddress] = useState(""); //주소변환
 
-  // const [meta, setMeta] = useState(""); //metadata
   const meta = useRef(null);
 
   const onSubmit = async (event) => {
@@ -38,15 +38,21 @@ const Register = ({ userObj }) => {
       attachmentUrl = await getDownloadURL(response.ref);
     }
 
+    if (attachmentUrl == "") {
+      alert("이미지 파일은 필수입니다.");
+    }
+
     const gongsaObj = {
       text: gongsa,
       createdAt: date,
       GPSLatitude: GPSla,
       GPSLongitude: GPSlong,
+      addr: address,
+      phone: userObj.displayName,
       createdId: userObj.uid,
       attachmentUrl,
       code: 0,
-      // 필드 태그 수정 필요(Ex. phoneNumber, addr(geocode) .. etc)
+      // 필드 태그 수정 필요
     };
     await addDoc(collection(dbService, "gongsa"), gongsaObj);
     setGongsa("");
@@ -74,7 +80,7 @@ const Register = ({ userObj }) => {
     };
     reader.readAsDataURL(theFile);
     meta.current = theFile;
-    //메타데이터 console
+
     if (theFile && theFile.name) {
       EXIF.getData(theFile, function () {
         let exifData = EXIF.pretty(this);
@@ -85,6 +91,10 @@ const Register = ({ userObj }) => {
 
         let la = [];
         let long = [];
+
+        //위경도 api 연동 변수
+        let a = "";
+        let b = "";
 
         if (exifData) {
           //exifdata 존재 시 gps 계산 수행
@@ -97,39 +107,72 @@ const Register = ({ userObj }) => {
           for (let i = 0; i < gpsLong.length; i++) {
             long[i] = gpsLong[i].numerator / gpsLong[i].denominator;
           }
+
           //값 확인 콘솔
           console.log(la, long, gpsLaRef, gpsLongRef);
 
-          //statedata 설정
+          //사진 시각 정보 설정
           setDate(EXIF.getTag(this, "DateTime"));
+
           //ref 조건 별 위경도 계산
           if (gpsLaRef == "N") {
-            setGPSLa(
+            a =
               parseInt(la[0]) +
-                (60 * parseInt(la[1]) + parseFloat(la[2])) / 3600
-            );
+              (60 * parseInt(la[1]) + parseFloat(la[2])) / 3600;
           } else {
-            setGPSLa(
+            a =
               -1 * parseInt(la[0]) +
-                (-60 * parseInt(la[1]) + -1 * parseFloat(la[2])) / 3600
-            );
+              (-60 * parseInt(la[1]) + -1 * parseFloat(la[2])) / 3600;
           }
+          setGPSLa(a);
+
           if (gpsLongRef == "E") {
-            setGPSLong(
+            b =
               parseInt(long[0]) +
-                (60 * parseInt(long[1]) + parseFloat(long[2])) / 3600
-            );
+              (60 * parseInt(long[1]) + parseFloat(long[2])) / 3600;
           } else {
-            setGPSLong(
+            b =
               -1 * parseInt(long[0]) +
-                (-60 * parseInt(long[1]) + -1 * parseFloat(long[2])) / 3600
-            );
+              (-60 * parseInt(long[1]) + -1 * parseFloat(long[2])) / 3600;
           }
+          setGPSLong(b);
         } else {
           console.log("No EXIF data found in image '" + theFile.name + "'.");
         }
+        //주소변환 실행
+        setFileData(a, b);
       });
     }
+  };
+
+  //주소변환함수
+  const setFileData = (a, b) => {
+    console.log(GPSla, GPSlong);
+    Geocode.fromLatLng(String(a), String(b)).then(
+      (response) => {
+        setAddress(response.results[0].formatted_address);
+        let city, state, country;
+        for (const element of response.results[0].address_components) {
+          for (let j = 0; j < element.types.length; j++) {
+            switch (element.types[j]) {
+              case "locality":
+                city = element.long_name;
+                break;
+              case "administrative_area_level_1":
+                state = element.long_name;
+                break;
+              case "country":
+                country = element.long_name;
+                break;
+            }
+          }
+        }
+        console.log(city, state, country);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   };
 
   const onClearAttachment = () => {
@@ -138,16 +181,17 @@ const Register = ({ userObj }) => {
   };
 
   const fileInput = useRef();
+  //attachment 유효성검사
 
   return (
     <div>
       <h2>민정씨 Component</h2>
       <form onSubmit={onSubmit}>
-        <input
+        <textarea
           value={gongsa}
           onChange={onChange}
           type="text"
-          placeholder="공사 정보 입력"
+          placeholder="공사 제목"
         />
         <input
           type="file"
@@ -155,6 +199,7 @@ const Register = ({ userObj }) => {
           onChange={onFileChange}
           ref={fileInput}
         />
+        <hr />
         <input type="submit" value="submit" />
         {attachment && (
           <div>
@@ -169,6 +214,8 @@ const Register = ({ userObj }) => {
         GPSLatitude : {GPSla}
         <hr />
         GPSLongitude : {GPSlong}
+        <hr />
+        Addr : {address}
       </form>
     </div>
   );
