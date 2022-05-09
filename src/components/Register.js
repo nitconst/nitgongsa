@@ -18,8 +18,8 @@ const Register = ({ userObj }) => {
   const [gongsas, setGongsas] = useState([]);
   const [attachment, setAttachment] = useState("");
   const [date, setDate] = useState("");
-  const [GPSla, setGPSLa] = useState([]);
-  const [GPSlong, setGPSLong] = useState([]);
+  const [GPSla, setGPSLa] = useState([]); //위도
+  const [GPSlong, setGPSLong] = useState([]); //경도
 
   // const [meta, setMeta] = useState(""); //metadata
   const meta = useRef(null);
@@ -41,6 +41,8 @@ const Register = ({ userObj }) => {
     const gongsaObj = {
       text: gongsa,
       createdAt: date,
+      GPSLatitude: GPSla,
+      GPSLongitude: GPSlong,
       createdId: userObj.uid,
       attachmentUrl,
       code: 0,
