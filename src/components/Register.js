@@ -11,7 +11,7 @@ Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
 Geocode.enableDebug();
 
-//geocode 작업 필요
+//모바일기기 체크박스 -> isIos(삼항연산자)로 조건, 컴포넌트 분리는 추후에
 
 const Register = ({ userObj }) => {
   const [gongsa, setGongsa] = useState("");
@@ -37,7 +37,7 @@ const Register = ({ userObj }) => {
       );
       attachmentUrl = await getDownloadURL(response.ref);
     }
-
+    //attachment 유효성검사
     if (attachmentUrl == "") {
       alert("이미지 파일은 필수입니다.");
     }
@@ -181,7 +181,6 @@ const Register = ({ userObj }) => {
   };
 
   const fileInput = useRef();
-  //attachment 유효성검사
 
   return (
     <div>
