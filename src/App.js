@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import AppRouter from "./components/Router";
-import { authService } from "./fbase";
+import AppRouter from "components/Router";
+import { authService } from "fbase";
 
 function App() {
   const [init, setInit] = useState(false);
@@ -8,12 +8,13 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    authService.onAuthStateChanged((user) => { //유저상태변화 정보
+    authService.onAuthStateChanged((user) => {
+      //유저상태변화 정보
       if (user) {
         setIsLoggedIn(true);
-        setUserObj({ 
+        setUserObj({
           displayName: user.phoneNumber, //로그인 시 폰 넘버
-          uid: user.uid,  //파이어베이스 제공 식별자
+          uid: user.uid, //파이어베이스 제공 식별자
         });
       } else {
         setIsLoggedIn(false);

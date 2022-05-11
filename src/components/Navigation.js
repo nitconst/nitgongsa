@@ -9,16 +9,10 @@ const Navigation = () => {
       <nav>
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/">홈</Link>
           </li>
           <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/profile">Profile</Link>
-          </li>
-          <li>
-            <Link to="/nothing-here">Nothing Here</Link>
+            <Link to="/profile">My</Link>
           </li>
         </ul>
       </nav>

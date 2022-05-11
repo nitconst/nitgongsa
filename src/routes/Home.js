@@ -1,42 +1,38 @@
-import React, {useState} from "react";
-import { dbService } from "../fbase";
-import { collection, addDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { dbService } from "fbase";
+import {
+  collection,
+  addDoc,
+  query,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
+import Register from "components/Register";
+import ReadGongsa from "components/ReadGongsa";
 
-const Home = () => {
-  const [gongsa, setGongsa] = useState("");
-  const onSubmit = async (event) => {
-    event.preventDefault();
-    await addDoc(collection(dbService, "gongsa"), {
-         gongsa,
-         createdAt: Date.now(),
-       });
-    //
-    // dbService.collection("gongsa").add({
-    //   gongsa,
-    //   createdAt: Date.now(),
-    // });
-  
-  setGongsa("");
-};
-  const onChange = (event) => {
-    const {
-      target : {value}
-    } = event;
-    setGongsa(value);
+const Home = ({ userObj }) => {
+  const [gongsa, setGongsa] = useState([]);
 
-  }
-  return(
-    
+  useEffect(() => {
+    const q = query(
+      collection(dbService, "gongsa"), //gongsa(collection name)
+      orderBy("createdAt", "desc")
+    );
+    onSnapshot(q, (snapshot) => {
+      const gongsaArr = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setGongsa(gongsaArr);
+    });
+  }, []);
+
+  return (
     <div>
-    {/* <Register/> //내용 옮기기
-    <ReadGongsa/> */}
-    
-  <form onSubmit={onSubmit}>
-    <input value={gongsa} onChange={onChange} type="text" placeholder="공사 내용 입력"/>
-    <input type="submit" value="제출"/>
-  </form>
-</div>
-);
+      <Register userObj={userObj} />
+      <ReadGongsa />
+    </div>
+  );
 };
 
 export default Home;
