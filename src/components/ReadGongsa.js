@@ -52,15 +52,10 @@ const ReadGongsa = ({ userObj }) => {
     const querySnapshot = await getDocs(collection(dbService, "gongsa"));
     const querySnapshotArray = [];
     querySnapshot.forEach((doc) => {
-      //   const key = doc._document.key.path.segments[6];
-      //   const dataObj = doc.data();
-      //   dataObj.key = key;
       querySnapshotArray.push(doc.data());
-      // querySnapshotArray.push(key);
     });
 
     setGongsaList(querySnapshotArray);
-    console.log(gongsaList);
   };
 
   //수정, 삭제 작업
@@ -83,12 +78,14 @@ const ReadGongsa = ({ userObj }) => {
     });
     // window.location.reload();
   };
-  const handleCancle = async (key) => {
+  const handleCancle = async (key, index) => {
     console.log("안녕 나는 삭제버튼");
+    console.log(gongsaList[index].attachmentUrl);
     // 삭제기능
     const ok = window.confirm("정말 삭제하시겠습니까?");
     if (ok) {
       await deleteDoc(doc(dbService, "gongsa", key));
+      // await storageService.refFromURL(gongsaList[index].attachmentUrl).delete();
       window.location.reload();
     }
   };
@@ -117,7 +114,7 @@ const ReadGongsa = ({ userObj }) => {
               </button>
               <button
                 onClick={() => {
-                  handleCancle(el.docKey);
+                  handleCancle(el.docKey, index);
                 }}
               >
                 삭제
