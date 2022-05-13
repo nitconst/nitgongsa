@@ -30,7 +30,7 @@ const Home = ({ userObj }) => {
   return (
     <div>
       <Register userObj={userObj} />
-      <ReadGongsa />
+      <ReadGongsa userObj={userObj} />
     </div>
   );
 };
