@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { dbService, storageService } from "../fbase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import EXIF from "exif-js";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
@@ -11,7 +11,7 @@ Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
 Geocode.enableDebug();
 
-//모바일기기 체크박스 -> isIos(삼항연산자)로 조건, 컴포넌트 분리는 추후에
+//(보류) 모바일기기 체크박스 -> isIos(삼항연산자)로 조건, 컴포넌트 분리는 추후에
 
 const Register = ({ userObj }) => {
   const [gongsa, setGongsa] = useState("");
@@ -42,19 +42,26 @@ const Register = ({ userObj }) => {
       alert("이미지 파일은 필수입니다.");
     }
 
+    //게시글 삭제,수정을 위한 고유키 값 부여
+    const key = uuidv4();
+
     const gongsaObj = {
       text: gongsa,
       createdAt: date,
       GPSLatitude: GPSla,
       GPSLongitude: GPSlong,
       addr: address,
+      docKey: key,
       phone: userObj.displayName,
       createdId: userObj.uid,
       attachmentUrl,
       code: 0,
+
       // 필드 태그 수정 필요
     };
-    await addDoc(collection(dbService, "gongsa"), gongsaObj);
+
+    //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
+    await setDoc(doc(dbService, "gongsa", key), gongsaObj);
     setGongsa("");
     setAttachment("");
   };
