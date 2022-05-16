@@ -40,6 +40,7 @@ const Register = ({ userObj }) => {
     //attachment 유효성검사
     if (attachmentUrl == "") {
       alert("이미지 파일은 필수입니다.");
+      window.location.reload();
     }
 
     //게시글 삭제,수정을 위한 고유키 값 부여
@@ -103,7 +104,7 @@ const Register = ({ userObj }) => {
         let a = "";
         let b = "";
 
-        if (exifData) {
+        if (gpsLa) {
           //exifdata 존재 시 gps 계산 수행
           console.log(exifData);
           console.log(gpsLa);
@@ -144,7 +145,10 @@ const Register = ({ userObj }) => {
           }
           setGPSLong(b);
         } else {
-          alert("사진의 위치정보가 존재하지 않습니다.");
+          alert(
+            "[오류] 사진의 위치정보가 존재하지 않습니다.\n\n ㅇ 위치기반 재촬영 방법 \n Android : 설정>위치>사용 활성화 \n iOS : 설정>카메라>포맷>높은 호환성>재촬영 후 사진 보관함에서 사진 선택"
+          );
+          window.location.reload();
         }
         //주소변환 실행
         setFileData(a, b);
@@ -184,6 +188,7 @@ const Register = ({ userObj }) => {
 
   const onClearAttachment = () => {
     setAttachment(null);
+    setGongsa(null);
     fileInput.current.value = null;
   };
 
