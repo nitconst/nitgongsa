@@ -144,7 +144,7 @@ const Register = ({ userObj }) => {
           }
           setGPSLong(b);
         } else {
-          console.log("No EXIF data found in image '" + theFile.name + "'.");
+          alert("사진의 위치정보가 존재하지 않습니다.");
         }
         //주소변환 실행
         setFileData(a, b);
