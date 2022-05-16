@@ -1,21 +1,33 @@
-import React, { useState } from "react";
-import { dbService, storageService } from "fbase";
+import React, { useEffect, useRef, useState } from "react";
+import { dbService, storageService } from "../fbase";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
-import { collection, addDoc } from "firebase/firestore";
+import EXIF from "exif-js";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import Geocode from "react-geocode";
 
-const OweetFactory = ({ userObj }) => {
+Geocode.setApiKey("AIzaSyBIWmLYzIJmYLxLoRsHchr0OAErLWpKcyI");
+Geocode.setLanguage("ko");
+Geocode.setRegion("kr");
+Geocode.enableDebug();
+
+//(보류) 모바일기기 체크박스 -> isIos(삼항연산자)로 조건, 컴포넌트 분리는 추후에
+
+const Register = ({ userObj }) => {
+  const [gongsa, setGongsa] = useState("");
+  const [gongsas, setGongsas] = useState([]);
   const [attachment, setAttachment] = useState("");
-  const [oweet, setOweet] = useState("");
+  const [date, setDate] = useState("");
+  const [GPSla, setGPSLa] = useState([]); //위도
+  const [GPSlong, setGPSLong] = useState([]); //경도
+  const [address, setAddress] = useState(""); //주소변환
+
+  const meta = useRef(null);
+
   const onSubmit = async (event) => {
     event.preventDefault();
-    let attachmentURL = "";
-    // await addDoc(collection(dbService, "oweets"), {
-    //   text: oweet,
-    //   createdAt: serverTimestamp(),
-    //   creatorId: userObj.uid,
-    // });
-    // setOweet("");
+    let attachmentUrl = "";
+
     if (attachment !== "") {
       const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
       const response = await uploadString(
@@ -23,25 +35,44 @@ const OweetFactory = ({ userObj }) => {
         attachment,
         "data_url"
       );
-      attachmentURL = await getDownloadURL(response.ref);
+      attachmentUrl = await getDownloadURL(response.ref);
+    }
+    //attachment 유효성검사
+    if (attachmentUrl == "") {
+      alert("이미지 파일은 필수입니다.");
     }
 
-    const oweetObj = {
-      text: oweet,
-      createdAt: Date.now(), //등록 시간, 사진 메타데이터 접근
-      creatorId: userObj.uid,
-      attachmentURL,
+    //게시글 삭제,수정을 위한 고유키 값 부여
+    const key = uuidv4();
+
+    const gongsaObj = {
+      text: gongsa,
+      createdAt: date,
+      GPSLatitude: GPSla,
+      GPSLongitude: GPSlong,
+      addr: address,
+      docKey: key,
+      phone: userObj.displayName,
+      createdId: userObj.uid,
+      attachmentUrl,
+      code: 0,
+
+      // 필드 태그 수정 필요
     };
-    await addDoc(collection(dbService, "oweets"), oweetObj);
-    setOweet("");
+
+    //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
+    await setDoc(doc(dbService, "gongsa", key), gongsaObj);
+    setGongsa("");
     setAttachment("");
   };
+
   const onChange = (event) => {
     const {
       target: { value },
     } = event;
-    setOweet(value);
+    setGongsa(value);
   };
+
   const onFileChange = (event) => {
     const {
       target: { files },
@@ -53,31 +84,147 @@ const OweetFactory = ({ userObj }) => {
         currentTarget: { result },
       } = finishedEvent;
       setAttachment(result);
-      console.log(result);
     };
-
     reader.readAsDataURL(theFile);
+    meta.current = theFile;
+
+    if (theFile && theFile.name) {
+      EXIF.getData(theFile, function () {
+        let exifData = EXIF.pretty(this);
+        let gpsLa = EXIF.getTag(this, "GPSLatitude");
+        let gpsLaRef = EXIF.getTag(this, "GPSLatitudeRef");
+        let gpsLong = EXIF.getTag(this, "GPSLongitude");
+        let gpsLongRef = EXIF.getTag(this, "GPSLongitudeRef");
+
+        let la = [];
+        let long = [];
+
+        //위경도 api 연동 변수
+        let a = "";
+        let b = "";
+
+        if (exifData) {
+          //exifdata 존재 시 gps 계산 수행
+          console.log(exifData);
+          console.log(gpsLa);
+          console.log(gpsLong);
+          for (let i = 0; i < gpsLa.length; i++) {
+            la[i] = gpsLa[i].numerator / gpsLa[i].denominator;
+          }
+          for (let i = 0; i < gpsLong.length; i++) {
+            long[i] = gpsLong[i].numerator / gpsLong[i].denominator;
+          }
+
+          //값 확인 콘솔
+          console.log(la, long, gpsLaRef, gpsLongRef);
+
+          //사진 시각 정보 설정
+          setDate(EXIF.getTag(this, "DateTime"));
+
+          //ref 조건 별 위경도 계산
+          if (gpsLaRef == "N") {
+            a =
+              parseInt(la[0]) +
+              (60 * parseInt(la[1]) + parseFloat(la[2])) / 3600;
+          } else {
+            a =
+              -1 * parseInt(la[0]) +
+              (-60 * parseInt(la[1]) + -1 * parseFloat(la[2])) / 3600;
+          }
+          setGPSLa(a);
+
+          if (gpsLongRef == "E") {
+            b =
+              parseInt(long[0]) +
+              (60 * parseInt(long[1]) + parseFloat(long[2])) / 3600;
+          } else {
+            b =
+              -1 * parseInt(long[0]) +
+              (-60 * parseInt(long[1]) + -1 * parseFloat(long[2])) / 3600;
+          }
+          setGPSLong(b);
+        } else {
+          console.log("No EXIF data found in image '" + theFile.name + "'.");
+        }
+        //주소변환 실행
+        setFileData(a, b);
+      });
+    }
   };
-  const onClearAttachment = () => setAttachment("");
+
+  //주소변환함수
+  const setFileData = (a, b) => {
+    console.log(GPSla, GPSlong);
+    Geocode.fromLatLng(String(a), String(b)).then(
+      (response) => {
+        setAddress(response.results[0].formatted_address);
+        let city, state, country;
+        for (const element of response.results[0].address_components) {
+          for (let j = 0; j < element.types.length; j++) {
+            switch (element.types[j]) {
+              case "locality":
+                city = element.long_name;
+                break;
+              case "administrative_area_level_1":
+                state = element.long_name;
+                break;
+              case "country":
+                country = element.long_name;
+                break;
+            }
+          }
+        }
+        console.log(city, state, country);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  };
+
+  const onClearAttachment = () => {
+    setAttachment(null);
+    fileInput.current.value = null;
+  };
+
+  const fileInput = useRef();
+
   return (
-    <form onSubmit={onSubmit}>
-      <input
-        value={oweet}
-        onChange={onChange}
-        type="text"
-        placeholder="What's on yout mind?"
-        maxLength={120}
-      />
-      <input type="file" accept="image/*" onChange={onFileChange} />
-      <input type="submit" value="submit" />
-      {attachment && (
-        <div>
-          <img src={attachment} width="50px" height="50px" />
-          <button onClick={onClearAttachment}>Clear</button>
-        </div>
-      )}
-    </form>
+    <div>
+      <h2>민정씨 Component</h2>
+      <form onSubmit={onSubmit}>
+        <textarea
+          value={gongsa}
+          onChange={onChange}
+          type="text"
+          placeholder="공사 제목"
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={onFileChange}
+          ref={fileInput}
+        />
+        <hr />
+        <input type="submit" value="submit" />
+        {attachment && (
+          <div>
+            <img src={attachment} width="50px" height="50px" />
+            <button onClick={onClearAttachment}>Clear</button>
+          </div>
+        )}
+        {console.log(meta)}
+        <hr />
+        Time : {date}
+        <hr />
+        GPSLatitude : {GPSla}
+        <hr />
+        GPSLongitude : {GPSlong}
+        <hr />
+        Addr : {address}
+      </form>
+    </div>
   );
 };
 
-export default OweetFactory;
+export default Register;

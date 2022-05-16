@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import App from "App";
+import Geocode from "react-geocode";
 import firebase from "firebase/compat/app";
-
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

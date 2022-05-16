@@ -124,9 +124,6 @@ const ReadGongsa = ({ userObj }) => {
             ""
           )}
         </div>
-      ))}
-    </div>
-  );
-};
+      ))};
 
 export default ReadGongsa;

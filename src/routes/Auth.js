@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { authService } from "../fbase";
+import { authService } from "fbase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 const Auth = () => {
@@ -39,28 +39,28 @@ const Auth = () => {
     //   {},
     //   authService
     // );
-    // signInWithPhoneNumber(authService, "+82" + phoneNumber, appVerifier)
-    //   .then((confirmationResult) => {
-    //     setIsSendSms(true);
-    //     // SMS sent. Prompt user to type the code from the message, then sign the
-    //     // user in with confirmationResult.confirm(code).
-    //     window.confirmationResult = confirmationResult;
-    //     // ...
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     // Error; SMS not sent
-    //     // ...
-    //   });
-    signInWithPhoneNumber(authService, phoneNumberTest, appVerifier)
-      .then(function (confirmationResult) {
-        // confirmationResult can resolve with the fictional testVerificationCode above.
-        return confirmationResult.confirm(testVerificationCode);
+    signInWithPhoneNumber(authService, "+82" + phoneNumber, appVerifier)
+      .then((confirmationResult) => {
+        setIsSendSms(true);
+        // SMS sent. Prompt user to type the code from the message, then sign the
+        // user in with confirmationResult.confirm(code).
+        window.confirmationResult = confirmationResult;
+        // ...
       })
-      .catch(function (error) {
+      .catch((error) => {
+        console.log(error);
         // Error; SMS not sent
         // ...
       });
+    // signInWithPhoneNumber(authService, phoneNumberTest, appVerifier)
+    //   .then(function (confirmationResult) {
+    //     // confirmationResult can resolve with the fictional testVerificationCode above.
+    //     return confirmationResult.confirm(testVerificationCode);
+    //   })
+    //   .catch(function (error) {
+    //     // Error; SMS not sent
+    //     // ...
+    //   });
   };
 
   const onCodeConfirmClick = (event) => {
