@@ -85,7 +85,7 @@ const ReadGongsa = ({ userObj }) => {
     const ok = window.confirm("정말 삭제하시겠습니까?");
     if (ok) {
       await deleteDoc(doc(dbService, "gongsa", key));
-      await storageService.refFromURL(gongsaList[index].attachmentUrl).delete();
+      // await storageService.refFromURL(gongsaList[index].attachmentUrl).delete();
       window.location.reload();
     }
   };
@@ -124,6 +124,9 @@ const ReadGongsa = ({ userObj }) => {
             ""
           )}
         </div>
-      ))};
+      ))}
+    </div>
+  );
+};
 
 export default ReadGongsa;
