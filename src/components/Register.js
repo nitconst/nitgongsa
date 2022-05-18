@@ -1,8 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { dbService, storageService } from "../fbase";
-import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  getDocs,
+  setDoc,
+  doc,
+  arrayRemove,
+} from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import EXIF from "exif-js";
+import { async } from "@firebase/util";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import Geocode from "react-geocode";
 
@@ -10,8 +20,6 @@ Geocode.setApiKey("AIzaSyBIWmLYzIJmYLxLoRsHchr0OAErLWpKcyI");
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
 Geocode.enableDebug();
-
-//(보류) 모바일기기 체크박스 -> isIos(삼항연산자)로 조건, 컴포넌트 분리는 추후에
 
 const Register = ({ userObj }) => {
   const [gongsa, setGongsa] = useState("");
@@ -21,8 +29,52 @@ const Register = ({ userObj }) => {
   const [GPSla, setGPSLa] = useState([]); //위도
   const [GPSlong, setGPSLong] = useState([]); //경도
   const [address, setAddress] = useState(""); //주소변환
-
+  const [arr, setArr] = useState([]); //주소변환
   const meta = useRef(null);
+
+  //조직관할 코드 Array(서울 : 1 경기 : 2 인천 : 3)
+  const CodeNum = [
+    { code: "000", region: undefined },
+    { code: "101", region: "강남구" },
+    { code: "102", region: "강동구" },
+    { code: "103", region: "강서구" },
+    { code: "104", region: "관악구" },
+    { code: "105", region: "구로구" },
+    { code: "106", region: "금천구" },
+    { code: "107", region: "동작구" },
+    { code: "108", region: "서초구" },
+    { code: "109", region: "송파구" },
+    { code: "110", region: "양천구" },
+    { code: "201", region: "과천시" },
+    { code: "202", region: "광명시" },
+    { code: "203", region: "광주시" },
+    { code: "204", region: "군포시" },
+    { code: "205", region: "김포시" },
+    { code: "206", region: "부천시" },
+    { code: "207", region: "성남시" },
+    { code: "208", region: "수원시" },
+    { code: "209", region: "시흥시" },
+    { code: "210", region: "안산시" },
+    { code: "211", region: "안성시" },
+    { code: "212", region: "안양시" },
+    { code: "213", region: "여주시" },
+    { code: "215", region: "오산시" },
+    { code: "216", region: "용인시" },
+    { code: "217", region: "의왕시" },
+    { code: "218", region: "이천시" },
+    { code: "219", region: "평택시" },
+    { code: "220", region: "하남시" },
+    { code: "221", region: "화성시" },
+    { code: "111", region: "영등포구" },
+    { code: "301", region: "계양구" },
+    { code: "302", region: "남구" },
+    { code: "303", region: "남동구" },
+    { code: "304", region: "동구" },
+    { code: "305", region: "부평구" },
+    { code: "306", region: "연수구" },
+    { code: "307", region: "옹진군" },
+    { code: "308", region: "중구" },
+  ];
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -43,6 +95,11 @@ const Register = ({ userObj }) => {
       window.location.reload();
     }
 
+    if (test == undefined) {
+      alert("관할 외 지역으로 등록이 불가합니다.");
+      window.location.reload();
+    }
+
     //게시글 삭제,수정을 위한 고유키 값 부여
     const key = uuidv4();
 
@@ -56,7 +113,7 @@ const Register = ({ userObj }) => {
       phone: userObj.displayName,
       createdId: userObj.uid,
       attachmentUrl,
-      code: 0,
+      code: test.code,
 
       // 필드 태그 수정 필요
     };
@@ -178,6 +235,9 @@ const Register = ({ userObj }) => {
             }
           }
         }
+
+        //배열에 공백 단위로 주소 나눠넣기 -> 이슈) 바로 실행 안되고 다음 단계에 실행됨
+        setArr(response.results[0].formatted_address.split(" "));
         console.log(city, state, country);
       },
       (error) => {
@@ -193,6 +253,12 @@ const Register = ({ userObj }) => {
   };
 
   const fileInput = useRef();
+
+  //code 찾기 (이슈 : 매칭 안되는 지역은 submit이 안됨)
+  const test = CodeNum.find((CodeNum) => {
+    return CodeNum.region === arr[2];
+  });
+  console.log(test);
 
   return (
     <div>

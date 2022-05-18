@@ -30,7 +30,7 @@ function App() {
       uid: user.uid,
     });
   };
-  console.log(userObj);
+
   return (
     <>
       {init ? (
