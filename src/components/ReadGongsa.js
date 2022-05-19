@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   collection,
   query,
@@ -11,7 +11,7 @@ import {
 } from "firebase/firestore";
 import { dbService, storageService } from "fbase";
 import styled from "styled-components";
-import { async } from "@firebase/util";
+import { async, querystring } from "@firebase/util";
 import { ref, deleteObject } from "firebase/storage";
 
 //style 적용
@@ -35,15 +35,19 @@ import { ref, deleteObject } from "firebase/storage";
 // const StyledTime = styled.li`
 //   text-align: right;
 // `;
+
 const Img = styled.img`
-  height: 200px;
+  height: 100px;
   border: none;
 `;
 
-//firestore data 호출
 const ReadGongsa = ({ userObj }) => {
   const [gongsaList, setGongsaList] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [changingIndex, setChangingIndex] = useState();
+  const [textEdit, setTextEdit] = useState();
 
+  //firestore data 호출
   useEffect(() => {
     getGongsaData();
   }, []);
@@ -54,38 +58,35 @@ const ReadGongsa = ({ userObj }) => {
     querySnapshot.forEach((doc) => {
       querySnapshotArray.push(doc.data());
     });
-
     setGongsaList(querySnapshotArray);
   };
 
-  //수정, 삭제 작업
-
-  const handleEdit = async (key) => {
-    console.log("안녕 나는 수정버튼");
-    // 수정기능
-    // 1. 전체 배열중에서 선택한 객체를 찾는다.
-    // 2. 객체의 키값을 얻어낸다.
-    // 3. 수정되는 부분.
-    // 3. 1 Storage에 존재하는 사진을 변경하는 경우
-    // 3.1.1 아마 docs 자체에 함수 존재할 것 같은데.
-    // 3.1.2 사진을 새로 올리니까 새로운 시간을 반영해야됨.
-    // 3.2 Text를 변경하는 경우
-    // 3.2.1 해당 객체의 텍스트를 변경해서 put하기.
-    // 3.2.2 docs에 내용 존재
-    // 4. 그 이후에 새로고침을 시킨다.
-    await updateDoc(doc(dbService, "gongsa", key), {
-      text: "trueee",
-    });
-    // window.location.reload();
+  //수정기능
+  const handleEdit = (index) => {
+    setIsEditing(true);
+    setChangingIndex(index);
+    setTextEdit(gongsaList[index].text);
   };
+  const handleChange = (e) => {
+    setTextEdit(e.target.value);
+  };
+
+  const handleSubmit = async (key) => {
+    await updateDoc(doc(dbService, "gongsa", key), {
+      text: textEdit,
+    });
+    window.location.reload();
+  };
+
+  //수정 취소기능
+  const cancelEditing = () => setIsEditing((prev) => !prev);
+
+  // 삭제기능
   const handleCancle = async (key, index) => {
-    console.log("안녕 나는 삭제버튼");
-    console.log(gongsaList[index].attachmentUrl);
-    // 삭제기능
     const ok = window.confirm("정말 삭제하시겠습니까?");
     if (ok) {
       await deleteDoc(doc(dbService, "gongsa", key));
-      // await storageService.refFromURL(gongsaList[index].attachmentUrl).delete();
+      await deleteObject(ref(storageService, gongsaList[index].attachmentUrl));
       window.location.reload();
     }
   };
@@ -95,33 +96,81 @@ const ReadGongsa = ({ userObj }) => {
     <div>
       <h2>현성씨 Component</h2>
       {gongsaList.map((el, index) => (
-        <div key={index}>
-          <ul>
-            <li>{el.addr}</li>
-            <li>{el.createdAt}</li>
-          </ul>
-          <li>
-            <Img src={el.attachmentUrl} />
-          </li>
-          {userObj.uid === el.createdId ? (
+        <div key={el.docKey}>
+          {isEditing ? (
             <>
-              <button
-                onClick={() => {
-                  handleEdit(el.docKey);
-                }}
-              >
-                수정
-              </button>
-              <button
-                onClick={() => {
-                  handleCancle(el.docKey, index);
-                }}
-              >
-                삭제
-              </button>
+              {changingIndex === index ? (
+                <>
+                  <Img src={el.attachmentUrl} />
+                  <div>
+                    <input
+                      type="text"
+                      placeholder={el.text}
+                      onChange={handleChange}
+                      value={textEdit}
+                    />
+                    <button
+                      onClick={() => {
+                        handleSubmit(el.docKey);
+                      }}
+                    >
+                      업데이트
+                    </button>
+                  </div>
+                  <button onClick={cancelEditing}>취소</button>
+                </>
+              ) : (
+                <>
+                  <h4>{el.text}</h4>
+                  <Img src={el.attachmentUrl} />
+                  {userObj.uid === el.createdId ? (
+                    <>
+                      <button
+                        onClick={() => {
+                          handleEdit(index);
+                        }}
+                      >
+                        수정
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleCancle(el.docKey, index);
+                        }}
+                      >
+                        삭제
+                      </button>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </>
+              )}
             </>
           ) : (
-            ""
+            <>
+              <h4>{el.text}</h4>
+              <Img src={el.attachmentUrl} />
+              {userObj.uid === el.createdId ? (
+                <>
+                  <button
+                    onClick={() => {
+                      handleEdit(index);
+                    }}
+                  >
+                    수정
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleCancle(el.docKey, index);
+                    }}
+                  >
+                    삭제
+                  </button>
+                </>
+              ) : (
+                ""
+              )}
+            </>
           )}
         </div>
       ))}
