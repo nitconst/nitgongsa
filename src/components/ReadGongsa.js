@@ -1,18 +1,21 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   collection,
-  query,
-  onSnapshot,
   getDocs,
   deleteDoc,
   updateDoc,
   doc,
-  documentId,
 } from "firebase/firestore";
 import { dbService, storageService } from "fbase";
 import styled from "styled-components";
 import { async, querystring } from "@firebase/util";
-import { ref, deleteObject } from "firebase/storage";
+import {
+  ref,
+  deleteObject,
+  uploadString,
+  getDownloadURL,
+} from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
 //style 적용
 // const StyledUl = styled.ul`
@@ -46,6 +49,7 @@ const ReadGongsa = ({ userObj }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [changingIndex, setChangingIndex] = useState();
   const [textEdit, setTextEdit] = useState();
+  const [attachment, setAttachment] = useState("");
 
   //firestore data 호출
   useEffect(() => {
@@ -71,10 +75,42 @@ const ReadGongsa = ({ userObj }) => {
     setTextEdit(e.target.value);
   };
 
-  const handleSubmit = async (key) => {
-    await updateDoc(doc(dbService, "gongsa", key), {
-      text: textEdit,
-    });
+  const handleFileChange = async (event) => {
+    const {
+      target: { files },
+    } = event;
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setAttachment(result);
+    };
+    reader.readAsDataURL(theFile);
+  };
+
+  const handleSubmit = async (key, index) => {
+    let attachmentUrl = "";
+    if (attachment !== "") {
+      await deleteObject(ref(storageService, gongsaList[index].attachmentUrl));
+      const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+      const response = await uploadString(
+        attachmentRef,
+        attachment,
+        "data_url"
+      );
+      attachmentUrl = await getDownloadURL(response.ref);
+      console.log(attachmentUrl);
+      await updateDoc(doc(dbService, "gongsa", key), {
+        text: textEdit,
+        attachmentUrl: attachmentUrl,
+      });
+    } else if (attachment === "") {
+      await updateDoc(doc(dbService, "gongsa", key), {
+        text: textEdit,
+      });
+    }
     window.location.reload();
   };
 
@@ -109,9 +145,14 @@ const ReadGongsa = ({ userObj }) => {
                       onChange={handleChange}
                       value={textEdit}
                     />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                    />
                     <button
                       onClick={() => {
-                        handleSubmit(el.docKey);
+                        handleSubmit(el.docKey, index);
                       }}
                     >
                       업데이트
