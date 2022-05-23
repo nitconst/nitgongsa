@@ -1,21 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { dbService, storageService } from "../fbase";
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  getDocs,
-  setDoc,
-  doc,
-  arrayRemove,
-} from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import EXIF from "exif-js";
 import { async } from "@firebase/util";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import Geocode from "react-geocode";
 
+<<<<<<< HEAD
 Geocode.setApiKey("AIzaSyBIWmLYzIJmYLxLoRsHchr0OAErLWpKcyI");
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
@@ -23,13 +15,15 @@ Geocode.enableDebug();
 
 const Register = ({ userObj }) => {
   const [gongsa, setGongsa] = useState("");
-  const [gongsas, setGongsas] = useState([]);
+=======
+const Register = ({ userObj }) => {
+>>>>>>> develop
   const [attachment, setAttachment] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(""); //시각
   const [GPSla, setGPSLa] = useState([]); //위도
   const [GPSlong, setGPSLong] = useState([]); //경도
   const [address, setAddress] = useState(""); //주소변환
-  const [arr, setArr] = useState([]); //주소변환
+  const [arr, setArr] = useState([]); //지역변환
   const meta = useRef(null);
 
   //조직관할 코드 Array(서울 : 1 경기 : 2 인천 : 3)
@@ -76,6 +70,7 @@ const Register = ({ userObj }) => {
     { code: "308", region: "중구" },
   ];
 
+  //submit 버튼 클릭 시 이벤트
   const onSubmit = async (event) => {
     event.preventDefault();
     let attachmentUrl = "";
@@ -95,14 +90,18 @@ const Register = ({ userObj }) => {
       window.location.reload();
     }
 
+    //지역코드 유효성검사
     if (test == undefined) {
-      alert("관할 외 지역으로 등록이 불가합니다.");
-      window.location.reload();
+      test = {
+        code: "404",
+        region: "UnKnown",
+      };
     }
 
     //게시글 삭제,수정을 위한 고유키 값 부여
     const key = uuidv4();
 
+    //DB저장 필드
     const gongsaObj = {
       text: gongsa,
       createdAt: date,
@@ -113,14 +112,19 @@ const Register = ({ userObj }) => {
       phone: userObj.displayName,
       createdId: userObj.uid,
       attachmentUrl,
-      code: test.code,
-
-      // 필드 태그 수정 필요
+      code: 0, //처리코드
+      regioncode: test.code, //지역코드
     };
 
+<<<<<<< HEAD
     //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
     await setDoc(doc(dbService, "gongsa", key), gongsaObj);
     setGongsa("");
+=======
+    
+    await addDoc(collection(dbService, "gongsa"), oweetObj);
+    setOweet("");
+>>>>>>> develop
     setAttachment("");
   };
 
@@ -131,6 +135,7 @@ const Register = ({ userObj }) => {
     setGongsa(value);
   };
 
+  //file(사진) 등록 시 event
   const onFileChange = (event) => {
     const {
       target: { files },
@@ -146,6 +151,7 @@ const Register = ({ userObj }) => {
     reader.readAsDataURL(theFile);
     meta.current = theFile;
 
+    //메타데이터 추출
     if (theFile && theFile.name) {
       EXIF.getData(theFile, function () {
         let exifData = EXIF.pretty(this);
@@ -207,7 +213,7 @@ const Register = ({ userObj }) => {
           );
           window.location.reload();
         }
-        //주소변환 실행
+        //위경도 기반 주소변환 실행
         setFileData(a, b);
       });
     }
@@ -236,7 +242,7 @@ const Register = ({ userObj }) => {
           }
         }
 
-        //배열에 공백 단위로 주소 나눠넣기 -> 이슈) 바로 실행 안되고 다음 단계에 실행됨
+        //배열에 공백 단위로 주소 나눠넣기
         setArr(response.results[0].formatted_address.split(" "));
         console.log(city, state, country);
       },
@@ -246,6 +252,7 @@ const Register = ({ userObj }) => {
     );
   };
 
+  //clear 버튼 클릭 시
   const onClearAttachment = () => {
     setAttachment(null);
     setGongsa(null);
@@ -255,12 +262,14 @@ const Register = ({ userObj }) => {
   const fileInput = useRef();
 
   //code 찾기 (이슈 : 매칭 안되는 지역은 submit이 안됨)
-  const test = CodeNum.find((CodeNum) => {
+  let test = CodeNum.find((CodeNum) => {
     return CodeNum.region === arr[2];
   });
+
   console.log(test);
 
   return (
+<<<<<<< HEAD
     <div>
       <h2>민정씨 Component</h2>
       <form onSubmit={onSubmit}>
@@ -295,6 +304,25 @@ const Register = ({ userObj }) => {
         Addr : {address}
       </form>
     </div>
+=======
+    <form onSubmit={onSubmit}>
+      <input
+        value={gongsa}
+        onChange={onChange}
+        type="text"
+        placeholder="공사 내용 입력"
+      />
+
+      <input type="file" accept="image/*" onChange={onFileChange} />
+      <input type="submit" value="제출" />
+      {attachment && (
+        <div>
+          <img src={attachment} width="50px" height="50px" />
+          <button onClick={onClearAttachment}>Clear</button>
+        </div>
+      )}
+    </form>
+>>>>>>> develop
   );
 };
 
