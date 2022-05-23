@@ -116,6 +116,8 @@ const Register = ({ userObj }) => {
     await setDoc(doc(dbService, "gongsa", key), gongsaObj);
     setGongsa("");
     setAttachment("");
+
+    window.location.reload();
   };
 
   const onChange = (event) => {
@@ -214,6 +216,7 @@ const Register = ({ userObj }) => {
     console.log(GPSla, GPSlong);
     Geocode.fromLatLng(String(a), String(b)).then(
       (response) => {
+        //대한민국 제외 주소 DB 저장
         setAddress(response.results[0].formatted_address.substr(5));
         let city, state, country;
         // let add = response.results[0].formatted_address;
