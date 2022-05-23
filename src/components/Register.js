@@ -214,8 +214,11 @@ const Register = ({ userObj }) => {
     console.log(GPSla, GPSlong);
     Geocode.fromLatLng(String(a), String(b)).then(
       (response) => {
-        setAddress(response.results[0].formatted_address);
+        setAddress(response.results[0].formatted_address.substr(5));
         let city, state, country;
+        // let add = response.results[0].formatted_address;
+        // let result = add.substr(5);
+        // console.log(result);
         for (const element of response.results[0].address_components) {
           for (let j = 0; j < element.types.length; j++) {
             switch (element.types[j]) {
@@ -230,6 +233,7 @@ const Register = ({ userObj }) => {
                 break;
             }
           }
+          console.log(element);
         }
 
         //배열에 공백 단위로 주소 나눠넣기
@@ -256,8 +260,6 @@ const Register = ({ userObj }) => {
     return CodeNum.region === arr[2];
   });
 
-  console.log(test);
-
   return (
     <div>
       <h2>민정씨 Component</h2>
@@ -282,7 +284,6 @@ const Register = ({ userObj }) => {
             <button onClick={onClearAttachment}>Clear</button>
           </div>
         )}
-        {console.log(meta)}
         <hr />
         Time : {date}
         <hr />
