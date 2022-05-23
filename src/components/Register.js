@@ -7,7 +7,6 @@ import { async } from "@firebase/util";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import Geocode from "react-geocode";
 
-<<<<<<< HEAD
 Geocode.setApiKey("AIzaSyBIWmLYzIJmYLxLoRsHchr0OAErLWpKcyI");
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
@@ -15,9 +14,6 @@ Geocode.enableDebug();
 
 const Register = ({ userObj }) => {
   const [gongsa, setGongsa] = useState("");
-=======
-const Register = ({ userObj }) => {
->>>>>>> develop
   const [attachment, setAttachment] = useState("");
   const [date, setDate] = useState(""); //시각
   const [GPSla, setGPSLa] = useState([]); //위도
@@ -116,15 +112,9 @@ const Register = ({ userObj }) => {
       regioncode: test.code, //지역코드
     };
 
-<<<<<<< HEAD
     //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
     await setDoc(doc(dbService, "gongsa", key), gongsaObj);
     setGongsa("");
-=======
-    
-    await addDoc(collection(dbService, "gongsa"), oweetObj);
-    setOweet("");
->>>>>>> develop
     setAttachment("");
   };
 
@@ -269,7 +259,6 @@ const Register = ({ userObj }) => {
   console.log(test);
 
   return (
-<<<<<<< HEAD
     <div>
       <h2>민정씨 Component</h2>
       <form onSubmit={onSubmit}>
@@ -304,25 +293,6 @@ const Register = ({ userObj }) => {
         Addr : {address}
       </form>
     </div>
-=======
-    <form onSubmit={onSubmit}>
-      <input
-        value={gongsa}
-        onChange={onChange}
-        type="text"
-        placeholder="공사 내용 입력"
-      />
-
-      <input type="file" accept="image/*" onChange={onFileChange} />
-      <input type="submit" value="제출" />
-      {attachment && (
-        <div>
-          <img src={attachment} width="50px" height="50px" />
-          <button onClick={onClearAttachment}>Clear</button>
-        </div>
-      )}
-    </form>
->>>>>>> develop
   );
 };
 
