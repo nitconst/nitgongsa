@@ -30,6 +30,7 @@ function App() {
       uid: user.uid,
     });
   };
+
   return (
     <>
       {init ? (
