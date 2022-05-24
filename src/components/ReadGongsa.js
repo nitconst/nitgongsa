@@ -1,21 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  collection,
-  getDocs,
-  deleteDoc,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { dbService, storageService } from "fbase";
 import styled from "styled-components";
-import { async, querystring } from "@firebase/util";
-import {
-  ref,
-  deleteObject,
-  uploadString,
-  getDownloadURL,
-} from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
+import GongsaList from "./GongsaList";
 
 //style 적용
 // const StyledUl = styled.ul`
@@ -46,10 +33,6 @@ const Img = styled.img`
 
 const ReadGongsa = ({ userObj }) => {
   const [gongsaList, setGongsaList] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [changingIndex, setChangingIndex] = useState();
-  const [textEdit, setTextEdit] = useState();
-  const [attachment, setAttachment] = useState("");
 
   //firestore data 호출
   useEffect(() => {
@@ -65,155 +48,17 @@ const ReadGongsa = ({ userObj }) => {
     setGongsaList(querySnapshotArray);
   };
 
-  //수정기능
-  const handleEdit = (index) => {
-    setIsEditing(true);
-    setChangingIndex(index);
-    setTextEdit(gongsaList[index].text);
-  };
-  const handleChange = (e) => {
-    setTextEdit(e.target.value);
-  };
-
-  const handleFileChange = async (event) => {
-    const {
-      target: { files },
-    } = event;
-    const theFile = files[0];
-    const reader = new FileReader();
-    reader.onloadend = (finishedEvent) => {
-      const {
-        currentTarget: { result },
-      } = finishedEvent;
-      setAttachment(result);
-    };
-    reader.readAsDataURL(theFile);
-  };
-
-  const handleSubmit = async (key, index) => {
-    let attachmentUrl = "";
-    if (attachment !== "") {
-      await deleteObject(ref(storageService, gongsaList[index].attachmentUrl));
-      const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
-      const response = await uploadString(
-        attachmentRef,
-        attachment,
-        "data_url"
-      );
-      attachmentUrl = await getDownloadURL(response.ref);
-      console.log(attachmentUrl);
-      await updateDoc(doc(dbService, "gongsa", key), {
-        text: textEdit,
-        attachmentUrl: attachmentUrl,
-      });
-    } else if (attachment === "") {
-      await updateDoc(doc(dbService, "gongsa", key), {
-        text: textEdit,
-      });
-    }
-    window.location.reload();
-  };
-
-  //수정 취소기능
-  const cancelEditing = () => setIsEditing((prev) => !prev);
-
-  // 삭제기능
-  const handleCancle = async (key, index) => {
-    const ok = window.confirm("정말 삭제하시겠습니까?");
-    if (ok) {
-      await deleteDoc(doc(dbService, "gongsa", key));
-      await deleteObject(ref(storageService, gongsaList[index].attachmentUrl));
-      window.location.reload();
-    }
-  };
-
   //firestore data 표시
   return (
     <div>
       <h2>현성씨 Component</h2>
-      {gongsaList.map((el, index) => (
-        <div key={el.docKey}>
-          {isEditing ? (
-            <>
-              {changingIndex === index ? (
-                <>
-                  <Img src={el.attachmentUrl} />
-                  <div>
-                    <input
-                      type="text"
-                      placeholder={el.text}
-                      onChange={handleChange}
-                      value={textEdit}
-                    />
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                    />
-                    <button
-                      onClick={() => {
-                        handleSubmit(el.docKey, index);
-                      }}
-                    >
-                      업데이트
-                    </button>
-                  </div>
-                  <button onClick={cancelEditing}>취소</button>
-                </>
-              ) : (
-                <>
-                  <h4>{el.text}</h4>
-                  <Img src={el.attachmentUrl} />
-                  {userObj.uid === el.createdId ? (
-                    <>
-                      <button
-                        onClick={() => {
-                          handleEdit(index);
-                        }}
-                      >
-                        수정
-                      </button>
-                      <button
-                        onClick={() => {
-                          handleCancle(el.docKey, index);
-                        }}
-                      >
-                        삭제
-                      </button>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </>
-              )}
-            </>
-          ) : (
-            <>
-              <h4>{el.text}</h4>
-              <Img src={el.attachmentUrl} />
-              {userObj.uid === el.createdId ? (
-                <>
-                  <button
-                    onClick={() => {
-                      handleEdit(index);
-                    }}
-                  >
-                    수정
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleCancle(el.docKey, index);
-                    }}
-                  >
-                    삭제
-                  </button>
-                </>
-              ) : (
-                ""
-              )}
-            </>
-          )}
-        </div>
+      {gongsaList.map((gongsa) => (
+        <GongsaList
+          gongsaObj={gongsa}
+          key={gongsa.docKey}
+          userObj={userObj}
+          isOwner={gongsa.createdId === userObj.uid}
+        />
       ))}
     </div>
   );
