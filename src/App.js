@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppRouter from "components/Router";
 import { authService } from "fbase";
+import RouteChangeTracker from "components/RouteChangeTracker";
+import { useLocation } from "react-router-dom";
 
-function App() {
+const App = () => {
   const [init, setInit] = useState(false);
   const [userObj, setUserObj] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,6 +33,8 @@ function App() {
     });
   };
 
+  // RouteChangeTracker();
+
   return (
     <>
       {init ? (
@@ -44,6 +48,6 @@ function App() {
       )}
     </>
   );
-}
+};
 
 export default App;
