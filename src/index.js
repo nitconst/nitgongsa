@@ -4,6 +4,10 @@ import App from "App";
 import Geocode from "react-geocode";
 import firebase from "firebase/compat/app";
 
+import "bulma/css/bulma.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "styles.scss";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>

@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  collection,
-  getDocs,
-  deleteDoc,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
+import { deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { dbService, storageService } from "fbase";
 import styled from "styled-components";
 import {
@@ -15,9 +9,11 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
+import GongsaStatus from "./GongsaStatus";
 
 const Img = styled.img`
   height: 100px;
+  width: 60%;
   border: none;
 `;
 
@@ -25,7 +21,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [textEdit, setTextEdit] = useState(gongsaObj.text);
   const [attachment, setAttachment] = useState("");
-
+  const [isDetail, setIsDetail] = useState(false);
   //삭제 기능
   const handleCancle = async (key, index) => {
     const ok = window.confirm("정말 삭제하시겠습니까?");
@@ -84,40 +80,189 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
   };
   const toggleEditing = () => setIsEditing((prev) => !prev);
 
+  const toggleDetail = () => setIsDetail((prev) => !prev);
+
   return (
     <div>
       {isEditing ? (
         <>
-          <div>
-            <Img src={gongsaObj.attachmentUrl} />
-            <input type="text" value={textEdit} onChange={onChange} required />
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            <button
-              onClick={() => {
-                handleSubmit(gongsaObj.docKey);
-              }}
-            >
-              업데이트
-            </button>
-            <button onClick={toggleEditing}>취소</button>
+          <div className="box edit-box">
+            <div className="field">
+              <label className="label">공사사진</label>
+              <div>
+                {attachment ? (
+                  <>
+                    <img src={attachment} className="reg-temp-img" alt="" />
+                  </>
+                ) : (
+                  <>
+                    <img
+                      src={gongsaObj.attachmentUrl}
+                      className="reg-temp-img"
+                      alt=""
+                    />
+                  </>
+                )}
+              </div>
+              <label htmlFor="edit-file" className="imgLabel">
+                <span>사진 변경 </span>
+                <span className="icon">
+                  <i className="fas fa-edit"></i>
+                </span>
+              </label>
+              <input
+                id="edit-file"
+                className="img-hide"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+            </div>
+            <div className="field">
+              <label className="label">주소</label>
+              <div className="control has-icons-left has-icons-right">
+                <input
+                  className="input is-small"
+                  type="text"
+                  placeholder="Text input"
+                  value={gongsaObj.addr}
+                  disabled
+                />
+                <span className="icon is-small is-left">
+                  <i className="fas fa-addr"></i>
+                </span>
+                <span className="icon is-small is-right">
+                  <i className="fas fa-check"></i>
+                </span>
+              </div>
+              <p className="help is-success is-small">
+                주소는 사진에 저장된 위치데이터 기반으로 자동생성됩니다.
+              </p>
+            </div>
+            <div className="field">
+              <label className="label">상태</label>
+              <div className="control">
+                <div className="select is-small">
+                  <select>
+                    <option>Select dropdown</option>
+                    <option>With options</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="field">
+              <label className="label">공사메모</label>
+              <div className="control">
+                <textarea
+                  className="textarea is-small"
+                  placeholder="공사메모 입력"
+                  onChange={onChange}
+                  value={textEdit}
+                ></textarea>
+              </div>
+            </div>
+            <div className="field is-grouped">
+              <div className="control">
+                <button
+                  className="button is-link is-rounded is-small"
+                  onClick={() => {
+                    handleSubmit(gongsaObj.docKey);
+                  }}
+                >
+                  수정
+                </button>
+              </div>
+              <div className="control">
+                <button
+                  className="button is-link is-rounded is-light is-small"
+                  onClick={toggleEditing}
+                >
+                  취소
+                </button>
+              </div>
+            </div>
           </div>
+          <hr />
         </>
       ) : (
         <>
-          <h4>{gongsaObj.text}</h4>
-          <Img src={gongsaObj.attachmentUrl} />
-          {isOwner && (
-            <>
-              <button onClick={toggleEditing}>수정</button>
-              <button
-                onClick={() => {
-                  handleCancle(gongsaObj.docKey);
-                }}
-              >
-                삭제
-              </button>
-            </>
-          )}
+          <article className="media" onClick={toggleDetail}>
+            {isDetail ? (
+              <div className="content is-small">
+                <h4>공사사진</h4>
+                <img src={gongsaObj.attachmentUrl} alt="" />
+                <h4>주소</h4>
+                <p>{gongsaObj.addr}</p>
+                <h4>처리상태</h4>
+                <p>{gongsaObj.code}</p>
+                <h4>공사메모</h4>
+                <p>{gongsaObj.text}</p>
+              </div>
+            ) : (
+              <>
+                <figure className="media-left">
+                  <GongsaStatus gongsaObj={gongsaObj} />
+                </figure>
+                <div className="media-content">
+                  <div className="content">
+                    <p>
+                      <strong>{gongsaObj.addr}</strong>
+                    </p>
+                  </div>
+                  {isOwner ? (
+                    <>
+                      <nav className="level is-mobile">
+                        <div className="level-left">
+                          <a className="level-item">
+                            <span className="icon is-small">
+                              <i
+                                className="fas fa-edit"
+                                onClick={toggleEditing}
+                              ></i>
+                            </span>
+                          </a>
+                          <a className="level-item">
+                            <span className="icon is-small">
+                              <i
+                                className="fas fa-trash"
+                                onClick={() => {
+                                  handleCancle(gongsaObj.docKey);
+                                }}
+                              ></i>
+                            </span>
+                          </a>
+                        </div>
+                        <div className="level-right">
+                          <div className="level-item">
+                            <label className="checkbox">
+                              <small className="time-small">
+                                {gongsaObj.createdAt}
+                              </small>
+                            </label>
+                          </div>
+                        </div>
+                      </nav>
+                    </>
+                  ) : (
+                    <nav className="level is-mobile">
+                      <div className="level-left"></div>
+                      <div className="level-right">
+                        <div className="level-item">
+                          <label className="checkbox">
+                            <small className="time-small">
+                              {gongsaObj.createdAt}
+                            </small>
+                          </label>
+                        </div>
+                      </div>
+                    </nav>
+                  )}
+                </div>
+              </>
+            )}
+          </article>
+          <hr />
         </>
       )}
     </div>
