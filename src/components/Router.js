@@ -3,7 +3,6 @@ import {
   HashRouter as Router,
   Routes,
   Route,
-  Outlet,
   Link,
   Navigate,
 } from "react-router-dom";
@@ -12,10 +11,14 @@ import Home from "routes/Home";
 import Profile from "routes/Profile";
 import Navigation from "components/Navigation";
 
-export default function AppRouter({ isLoggedIn, userObj, refreshUser }) {
+export default function AppRouter({
+  isLoggedIn,
+  userObj,
+  refreshUser,
+  codeNum,
+}) {
   return (
     <div>
-      <h1>사외공사장 테스트</h1>
       {/* Routes nest inside one another. Nested route paths build upon
             parent route paths, and nested route elements render inside
             parent route elements. See the note about <Outlet> below. */}
@@ -24,7 +27,10 @@ export default function AppRouter({ isLoggedIn, userObj, refreshUser }) {
           {isLoggedIn ? (
             <>
               <Route path="/" element={<Navigation />}>
-                <Route index element={<Home userObj={userObj} />} />
+                <Route
+                  index
+                  element={<Home userObj={userObj} codeNum={codeNum} />}
+                />
                 <Route
                   path="profile"
                   element={
