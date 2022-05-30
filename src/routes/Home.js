@@ -10,7 +10,7 @@ import {
 import Register from "components/Register";
 import ReadGongsa from "components/ReadGongsa";
 
-const Home = ({ userObj, codeNum }) => {
+const Home = ({ userObj }) => {
   const [gongsa, setGongsa] = useState([]);
 
   useEffect(() => {
@@ -29,18 +29,8 @@ const Home = ({ userObj, codeNum }) => {
 
   return (
     <div>
-      <div className="container is-mobile">
-        <section className="hero is-small is-link">
-          <div className="hero-body">
-            <p className="title">사외공사 간편신고 웹</p>
-            <p className="subtitle">
-              스마트폰 카메라 촬영으로 공사 간편신고가 가능한 Web입니다.
-            </p>
-          </div>
-        </section>
-        <Register userObj={userObj} codeNum={codeNum} />
-        <ReadGongsa userObj={userObj} codeNum={codeNum} />
-      </div>
+      <Register userObj={userObj} />
+      <ReadGongsa />
     </div>
   );
 };
