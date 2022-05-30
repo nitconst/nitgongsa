@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { authService } from "fbase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import Lottie from "react-lottie";
-import mainAnimationData from "lotties/auth-construction.json";
 
 const Auth = () => {
   const [phoneNumber, setPhonenumber] = useState("");
@@ -11,16 +9,6 @@ const Auth = () => {
   const appVerifier = window.recaptchaVerifier;
   const phoneNumberTest = "+16505551234";
   const testVerificationCode = "123456";
-
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: mainAnimationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
-
   const onChanged = (event) => {
     const {
       target: { name, value },
@@ -92,56 +80,31 @@ const Auth = () => {
   };
   return (
     <>
-      <div className="auth-container">
-        <div className="content">
-          <h1>사외공사 간편신고 웹</h1>
-        </div>
-        <Lottie options={defaultOptions} height={200} width={200} />
-        <div className="field is-grouped">
-          <p className="control is-expanded">
-            <input
-              className="input"
-              name="phone"
-              type="phone"
-              placeholder="'-'없이 입력'"
-              value={phoneNumber}
-              onChange={onChanged}
-            />
-          </p>
-          <p className="control">
-            <a className="button is-link is-rounded" onClick={onSubmit}>
-              로그인
-            </a>
-          </p>
-        </div>
-
+      <form onSubmit={onSubmit}>
+        <input
+          name="phone"
+          type="phone"
+          placeholder="'-' 없이 입력"
+          required
+          value={phoneNumber}
+          onChange={onChanged}
+        />
+        <input type="submit" value="Log In" />
+      </form>
+      {isSendSMS && (
         <>
-          {isSendSMS && (
-            <div className="field is-grouped">
-              <p className="control is-expanded">
-                <input
-                  className="input"
-                  name="code"
-                  type="text"
-                  placeholder="인증번호"
-                  required
-                  value={codeNumber}
-                  onChange={onChanged}
-                />
-              </p>
-              <p className="control">
-                <a
-                  className="button is-dark is-rounded"
-                  onClick={onCodeConfirmClick}
-                >
-                  인증번호확인
-                </a>
-              </p>
-            </div>
-          )}
+          <input
+            name="code"
+            type="text"
+            placeholder="인증번호"
+            required
+            value={codeNumber}
+            onChange={onChanged}
+          />
+          <button onClick={onCodeConfirmClick} value="인증번호확인" />
         </>
-        <div id="recaptcha-container"></div>
-      </div>
+      )}
+      <div id="recaptcha-container"></div>
     </>
   );
 };
