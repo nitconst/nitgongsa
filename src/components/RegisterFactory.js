@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import EXIF from "exif-js";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import Geocode from "react-geocode";
+import imageCompression from "browser-image-compression";
 
 Geocode.setApiKey("AIzaSyBIWmLYzIJmYLxLoRsHchr0OAErLWpKcyI");
 Geocode.setLanguage("ko");
@@ -46,8 +47,8 @@ const RegisterFactory = ({ userObj, codeNum }) => {
     //지역코드 유효성검사
     if (test == undefined) {
       test = {
-        code: "404",
-        region: "UnKnown",
+        code: "999",
+        region: "기타",
       };
     }
 
@@ -85,20 +86,44 @@ const RegisterFactory = ({ userObj, codeNum }) => {
   };
 
   //file(사진) 등록 시 event
-  const onFileChange = (event) => {
+  const onFileChange = async (event) => {
     const {
       target: { files },
     } = event;
-    const theFile = files[0];
-    const reader = new FileReader();
-    reader.onloadend = (finishedEvent) => {
-      const {
-        currentTarget: { result },
-      } = finishedEvent;
-      setAttachment(result);
+    const theFile = files[0]; //파일 읽는 상수 선언
+    console.log("originalFile instanceof Blob", theFile instanceof Blob); // true
+    console.log(`originalFile size ${theFile.size / 1024 / 1024} MB`);
+
+    const reader = new FileReader(); //web에 불러오는 상수 선언
+
+    //resize 함수 작성
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
     };
-    reader.readAsDataURL(theFile);
-    meta.current = theFile;
+
+    try {
+      const compressedFile = await imageCompression(theFile, options);
+      console.log(
+        "compressedFile instanceof Blob",
+        compressedFile instanceof Blob
+      ); // true
+      console.log(
+        `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+      ); // smaller than maxSizeMB
+      reader.onloadend = (finishedEvent) => {
+        const {
+          currentTarget: { result },
+        } = finishedEvent;
+
+        setAttachment(result);
+      };
+      reader.readAsDataURL(compressedFile);
+      meta.current = compressedFile;
+    } catch (error) {
+      console.log(error);
+    }
 
     //메타데이터 추출
     if (theFile && theFile.name) {

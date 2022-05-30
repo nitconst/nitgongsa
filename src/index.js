@@ -3,10 +3,17 @@ import ReactDOM from "react-dom/client";
 import App from "App";
 import Geocode from "react-geocode";
 import firebase from "firebase/compat/app";
-
+import { BrowserRouter } from "react-router-dom";
 import "bulma/css/bulma.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "styles.scss";
+
+//google analytics(~13)
+import ReactGA from "react-ga";
+
+const TRACKING_ID = process.env.REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID;
+
+ReactGA.initialize(TRACKING_ID);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
