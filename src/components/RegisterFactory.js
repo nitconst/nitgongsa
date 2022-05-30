@@ -242,7 +242,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
 
   const fileInput = useRef();
 
-  //code 찾기
+  //code 찾기 (이슈 : 매칭 안되는 지역은 submit이 안됨)
   let test = codeNum.find((codeNum) => {
     return codeNum.region === arr[2];
   });
