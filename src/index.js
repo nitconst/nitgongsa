@@ -4,6 +4,9 @@ import App from "App";
 import Geocode from "react-geocode";
 import firebase from "firebase/compat/app";
 import { BrowserRouter } from "react-router-dom";
+import "bulma/css/bulma.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "styles.scss";
 
 //google analytics(~13)
 import ReactGA from "react-ga";

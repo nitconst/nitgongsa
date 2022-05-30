@@ -7,16 +7,50 @@ const Navigation = () => {
       {/* A "layout route" is a good place to put markup you want to
             share across all the pages on your site, like navigation. */}
       <nav>
-        <ul>
-          <li>
-            <Link to="/">홈</Link>
-          </li>
-          <li>
-            <Link to="/profile">My</Link>
-          </li>
-        </ul>
+        <div className="nav-header">
+          <div className="nav-content">
+            <div className="nav-brand"></div>
+            <div className="nav-ul">
+              <ul
+                style={{
+                  display: "flex",
+                  justifyContent: "right",
+                  paddingTop: 20,
+                  marginRight: 20,
+                }}
+              >
+                <li>
+                  <Link to="/">
+                    <span className="icon-text is-large">
+                      <span className="icon ">
+                        <i className="fas fa-lg fa-home"></i>
+                      </span>
+                      <span>홈</span>
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/profile"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span className="icon-text is-large">
+                      <span className="icon ">
+                        <i className="fas fa-lg fa-user"></i>
+                      </span>
+                      <span>My</span>
+                    </span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </nav>
-      <hr />
 
       {/* An <Outlet> renders whatever child route is currently active,
             so you can think about this <Outlet> as a placeholder for
