@@ -27,7 +27,7 @@ const Profile = ({ userObj }) => {
     setNewDisplayName(userObj.displayName.replace("+82", "0"));
   }, []);
   const onLogOutClick = async () => await authService.signOut();
-  console.log(userObj);
+
   return (
     <div className="container is-mobile">
       <button className="button is-ghost is-small" onClick={onLogOutClick}>

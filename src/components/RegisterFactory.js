@@ -259,7 +259,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
           placeholder="공사관련 메모"
         />
         <input
-          className="button is-link is-small is-rounded reg-btn"
+          className="button is-link is-rounded reg-btn"
           type="submit"
           value="등록"
         />

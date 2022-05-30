@@ -22,6 +22,15 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
   const [textEdit, setTextEdit] = useState(gongsaObj.text);
   const [attachment, setAttachment] = useState("");
   const [isDetail, setIsDetail] = useState(false);
+  const [isHiding, setIsHiding] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(gongsaObj.code);
+
+  const code = [
+    { code: "0", status: "신고 중" },
+    { code: "1", status: "처리 중" },
+    { code: "2", status: "조치완료" },
+  ];
+
   //삭제 기능
   const handleCancle = async (key, index) => {
     const ok = window.confirm("정말 삭제하시겠습니까?");
@@ -69,14 +78,20 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
       attachmentUrl = await getDownloadURL(response.ref);
       await updateDoc(doc(dbService, "gongsa", key), {
         text: textEdit,
+        code: Number(selectedItem),
         attachmentUrl: attachmentUrl,
       });
     } else if (attachment === "") {
       await updateDoc(doc(dbService, "gongsa", key), {
         text: textEdit,
+        code: Number(selectedItem),
       });
     }
     window.location.reload();
+  };
+
+  const onChangeHandler = (e) => {
+    setSelectedItem(e.currentTarget.value);
   };
   const toggleEditing = () => setIsEditing((prev) => !prev);
 
@@ -126,7 +141,6 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
                   type="text"
                   placeholder="Text input"
                   value={gongsaObj.addr}
-                  disabled
                 />
                 <span className="icon is-small is-left">
                   <i className="fas fa-addr"></i>
@@ -140,12 +154,18 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
               </p>
             </div>
             <div className="field">
-              <label className="label">상태</label>
+              <label className="label">처리상태</label>
               <div className="control">
                 <div className="select is-small">
-                  <select>
-                    <option>Select dropdown</option>
-                    <option>With options</option>
+                  <select
+                    value={selectedItem}
+                    onChange={(e) => onChangeHandler(e)}
+                  >
+                    {code.map((item, index) => (
+                      <option key={item.code} value={item.code}>
+                        {item.status}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -165,7 +185,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
             <div className="field is-grouped">
               <div className="control">
                 <button
-                  className="button is-link is-rounded is-small"
+                  className="button is-link is-rounded"
                   onClick={() => {
                     handleSubmit(gongsaObj.docKey);
                   }}
@@ -175,7 +195,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
               </div>
               <div className="control">
                 <button
-                  className="button is-link is-rounded is-light is-small"
+                  className="button is-link is-rounded is-light"
                   onClick={toggleEditing}
                 >
                   취소
@@ -187,15 +207,33 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
         </>
       ) : (
         <>
-          <article className="media" onClick={toggleDetail}>
+          <article className="media">
             {isDetail ? (
-              <div className="content is-small">
+              <div className="content is-small content-detail">
+                <div className="div-arrow" onClick={toggleDetail}>
+                  <span className="icon">
+                    {isDetail ? (
+                      <>
+                        <i className="fa-solid fa-lg fa-angle-down" />
+                      </>
+                    ) : (
+                      <>
+                        <i className="fa-solid fa-lg fa-angle-right" />
+                      </>
+                    )}
+                  </span>
+                </div>
                 <h4>공사사진</h4>
                 <img src={gongsaObj.attachmentUrl} alt="" />
                 <h4>주소</h4>
                 <p>{gongsaObj.addr}</p>
                 <h4>처리상태</h4>
-                <p>{gongsaObj.code}</p>
+                <p>
+                  {
+                    code.find(({ code }) => code === String(gongsaObj.code))
+                      .status
+                  }
+                </p>
                 <h4>공사메모</h4>
                 <p>{gongsaObj.text}</p>
               </div>
@@ -205,10 +243,23 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
                   <GongsaStatus gongsaObj={gongsaObj} />
                 </figure>
                 <div className="media-content">
-                  <div className="content">
+                  <div className="content content-gongsa">
                     <p>
                       <strong>{gongsaObj.addr}</strong>
                     </p>
+                    <div className="div-arrow" onClick={toggleDetail}>
+                      <span className="icon">
+                        {isDetail ? (
+                          <>
+                            <i className="fa-solid fa-angle-down" />
+                          </>
+                        ) : (
+                          <>
+                            <i className="fa-solid fa-angle-right" />
+                          </>
+                        )}
+                      </span>
+                    </div>
                   </div>
                   {isOwner ? (
                     <>
@@ -217,7 +268,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
                           <a className="level-item">
                             <span className="icon is-small">
                               <i
-                                className="fas fa-edit"
+                                className="fas fa-lg fa-edit"
                                 onClick={toggleEditing}
                               ></i>
                             </span>
@@ -225,7 +276,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
                           <a className="level-item">
                             <span className="icon is-small">
                               <i
-                                className="fas fa-trash"
+                                className="fas fa-lg fa-trash"
                                 onClick={() => {
                                   handleCancle(gongsaObj.docKey);
                                 }}

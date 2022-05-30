@@ -16,15 +16,15 @@ const Register = ({ userObj, codeNum }) => {
             <i className="fa-solid fa-pen is-large"></i>
           </span>
           <p className="box-header-text">공사정보 간편신고</p>
-          <div className="div-arrow">
+          <div className="div-arrow" onClick={toggleHide}>
             <span className="icon">
               {isHiding ? (
                 <>
-                  <i className="fa-solid fa-angle-down" onClick={toggleHide} />
+                  <i className="fa-solid fa-angle-down" />
                 </>
               ) : (
                 <>
-                  <i className="fa-solid fa-angle-right" onClick={toggleHide} />
+                  <i className="fa-solid fa-angle-right" />
                 </>
               )}
             </span>
