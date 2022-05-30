@@ -4,18 +4,19 @@ import { dbService } from "fbase";
 import styled from "styled-components";
 import GongsaList from "./GongsaList";
 
-const Img = styled.img`
-  height: 100px;
-  border: none;
-`;
-
 const ReadGongsa = ({ userObj, codeNum }) => {
   const [gongsaList, setGongsaList] = useState([]);
   const [selectedItem, setSelectedItem] = useState("000");
+
   //firestore data 호출
   useEffect(() => {
     getGongsaData();
   }, []);
+
+  useEffect(() => {
+    if (selectedItem === "000") getGongsaData();
+    else getGongsaDataByRegion();
+  }, [selectedItem]);
 
   const getGongsaData = async () => {
     const querySnapshot = await getDocs(collection(dbService, "gongsa"));
@@ -27,9 +28,7 @@ const ReadGongsa = ({ userObj, codeNum }) => {
   };
 
   const onChangeHandler = (e) => {
-    console.log(e.currentTarget.value);
     setSelectedItem(e.currentTarget.value);
-    getGongsaDataByRegion();
   };
 
   const getGongsaDataByRegion = async () => {
@@ -56,6 +55,7 @@ const ReadGongsa = ({ userObj, codeNum }) => {
           </span>
           <p className="box-header-text">공사신고 리스트</p>
         </div>
+
         <div className="select select-region">
           <select value={selectedItem} onChange={(e) => onChangeHandler(e)}>
             {codeNum.map((item, index) => (
