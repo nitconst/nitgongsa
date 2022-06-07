@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { dbService, storageService } from "fbase";
 import styled from "styled-components";
@@ -24,6 +24,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
   const [isDetail, setIsDetail] = useState(false);
   const [isHiding, setIsHiding] = useState(false);
   const [selectedItem, setSelectedItem] = useState(gongsaObj.code);
+  const [docKey, setDocKey] = useState("");
 
   const code = [
     { code: "0", status: "신고 중" },
@@ -90,8 +91,27 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
     window.location.reload();
   };
 
-  const onChangeHandler = (e) => {
+  const onChangeHandler = (e, key) => {
     setSelectedItem(e.currentTarget.value);
+    // select name이 detail인 경우 (모든 유저가 처리상태 수정하기 위한 부분)
+    if (e.target.name === "detail") {
+      setDocKey(gongsaObj.docKey);
+    }
+  };
+
+  // 처리상태 select값 바뀔 때 effect
+  useEffect(() => {
+    // detail인 경우만 처리상태 바로 수정, 아닌 경우는 수정버튼 눌렀을때 수정(handleSubmit 참조)
+    if (isDetail) {
+      codeModifying(docKey);
+    }
+  }, [selectedItem, docKey]);
+
+  // 처리상태 코드만 수정하는 부분
+  const codeModifying = async (key) => {
+    await updateDoc(doc(dbService, "gongsa", key), {
+      code: Number(selectedItem),
+    });
   };
   const toggleEditing = () => setIsEditing((prev) => !prev);
 
@@ -159,7 +179,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
                 <div className="select is-small">
                   <select
                     value={selectedItem}
-                    onChange={(e) => onChangeHandler(e)}
+                    onChange={(e) => onChangeHandler(e, gongsaObj.docKey)}
                   >
                     {code.map((item, index) => (
                       <option key={item.code} value={item.code}>
@@ -228,12 +248,22 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
                 <h4>주소</h4>
                 <p>{gongsaObj.addr}</p>
                 <h4>처리상태</h4>
-                <p>
-                  {
-                    code.find(({ code }) => code === String(gongsaObj.code))
-                      .status
-                  }
-                </p>
+
+                <div className="control">
+                  <div className="select is-small">
+                    <select
+                      value={selectedItem}
+                      name="detail"
+                      onChange={(e) => onChangeHandler(e, gongsaObj.docKey)}
+                    >
+                      {code.map((item, index) => (
+                        <option key={item.code} value={item.code}>
+                          {item.status}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
                 <h4>공사메모</h4>
                 <p>{gongsaObj.text}</p>
               </div>

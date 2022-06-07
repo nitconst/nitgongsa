@@ -1,9 +1,10 @@
+// 공사 처리상태 Component
 import React from "react";
 
 const GongsaStatus = ({ gongsaObj }) => {
   switch (gongsaObj.code) {
     case 0:
-      return <span className="tag is-warning">신고 중</span>;
+      return <span className="tag is-warning">신고</span>;
     case 1:
       return <span className="tag is-light">처리 중</span>;
     case 2:
