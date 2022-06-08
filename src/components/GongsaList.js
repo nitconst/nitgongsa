@@ -27,7 +27,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
   const [docKey, setDocKey] = useState("");
 
   const code = [
-    { code: "0", status: "신고 중" },
+    { code: "0", status: "신고" },
     { code: "1", status: "처리 중" },
     { code: "2", status: "조치완료" },
   ];
