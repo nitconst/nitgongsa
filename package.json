@@ -18,6 +18,7 @@
     "bulma-pagination-react": "^0.1.1",
     "exif-js": "^2.3.0",
     "firebase": "^9.6.11",
+    "jquery": "^3.6.0",
     "node-sass": "^7.0.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
