@@ -7,6 +7,8 @@ import EXIF from "exif-js";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import Geocode from "react-geocode";
 import imageCompression from "browser-image-compression";
+import Lottie from "react-lottie";
+import loadingAnimationData from "lotties/loading-construction.json";
 
 Geocode.setApiKey("AIzaSyBIWmLYzIJmYLxLoRsHchr0OAErLWpKcyI");
 Geocode.setLanguage("ko");
@@ -22,10 +24,12 @@ const RegisterFactory = ({ userObj, codeNum }) => {
   const [address, setAddress] = useState(""); //주소변환
   const [arr, setArr] = useState([]); //지역변환
   const [isImgMeta, setIsImgMeta] = useState(false);
+  const [load, setLoad] = useState(true);
   const meta = useRef(null);
 
   //submit 버튼 클릭 시 이벤트
   const onSubmit = async (event) => {
+    setLoad(false);
     event.preventDefault();
     let attachmentUrl = "";
 
@@ -186,7 +190,8 @@ const RegisterFactory = ({ userObj, codeNum }) => {
           alert(
             "[오류] 사진의 위치정보가 존재하지 않습니다.\n\n ㅇ 위치기반 재촬영 방법 \n Android : 1. 설정>위치>사용 활성화 \n 2. 카메라>좌측 톱니바퀴 아이콘>위치 태그 활성화 \n iOS : 설정>카메라>포맷>높은 호환성>재촬영 후 사진 보관함에서 사진 선택"
           );
-          window.location.reload();
+          onClearAttachment();
+          // window.location.reload();
         }
         //위경도 기반 주소변환 실행
         setFileData(a, b);
@@ -247,61 +252,80 @@ const RegisterFactory = ({ userObj, codeNum }) => {
     return codeNum.region === arr[2];
   });
 
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loadingAnimationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
   return (
-    <div>
-      <hr className="hr-main" />
-      <form className="boxForm" onSubmit={onSubmit}>
-        <label htmlFor="attach-file" className="imgLabel">
-          <span>사진 추가 </span>
-          <span className="icon">
-            <i className="fas fa-plus"></i>
-          </span>
-        </label>
-        <input
-          id="attach-file"
-          className="img-hide"
-          type="file"
-          accept="image/*"
-          onChange={onFileChange}
-          ref={fileInput}
-        />
-        {attachment && (
-          <div>
-            <img src={attachment} className="reg-temp-img" />
-            <button
-              className="button is-small is-rounded"
-              onClick={onClearAttachment}
-            >
-              Clear
-            </button>
-          </div>
-        )}
-        <textarea
-          className="textarea is-small"
-          value={gongsa}
-          onChange={onChange}
-          type="text"
-          placeholder="공사관련 메모"
-        />
-        <input
-          className="button is-link is-rounded reg-btn"
-          type="submit"
-          value="등록"
-        />
-        {isImgMeta && (
-          <>
-            <hr />
-            <div className="content is-small">
-              <h4>주소</h4>
-              <p>{address}</p>
-              <h4>시간</h4>
-              <p>{date}</p>
-            </div>
-          </>
-        )}
-      </form>
-    </div>
+    <>
+      {load ? (
+        <div>
+          <hr className="hr-main" />
+          <form className="boxForm" onSubmit={onSubmit}>
+            <label htmlFor="attach-file" className="imgLabel">
+              <span>사진 추가 </span>
+              <span className="icon">
+                <i className="fas fa-plus"></i>
+              </span>
+            </label>
+            <input
+              id="attach-file"
+              className="img-hide"
+              type="file"
+              accept="image/*"
+              onChange={onFileChange}
+              ref={fileInput}
+            />
+            {attachment && (
+              <div>
+                <img src={attachment} className="reg-temp-img" />
+                <button
+                  className="button is-small is-rounded"
+                  onClick={onClearAttachment}
+                >
+                  Clear
+                </button>
+              </div>
+            )}
+            <textarea
+              className="textarea is-small"
+              value={gongsa}
+              onChange={onChange}
+              type="text"
+              placeholder="공사관련 메모"
+            />
+            <input
+              className="button is-link is-rounded reg-btn"
+              type="submit"
+              value="등록"
+            />
+            {isImgMeta && (
+              <>
+                <hr />
+                <div className="content is-small">
+                  <h4>주소</h4>
+                  <p>{address}</p>
+                  <h4>시간</h4>
+                  <p>{date}</p>
+                </div>
+              </>
+            )}
+          </form>
+        </div>
+      ) : (
+        <div className="auth-container">
+          <Lottie options={defaultOptions} height={200} width={200} />
+        </div>
+      )}
+    </>
   );
 };
 
 export default RegisterFactory;
+
+//hi
