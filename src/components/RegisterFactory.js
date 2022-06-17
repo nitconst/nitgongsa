@@ -9,6 +9,7 @@ import Geocode from "react-geocode";
 import imageCompression from "browser-image-compression";
 import Lottie from "react-lottie";
 import loadingAnimationData from "lotties/loading-construction.json";
+import { set } from "react-ga";
 
 Geocode.setApiKey("AIzaSyBIWmLYzIJmYLxLoRsHchr0OAErLWpKcyI");
 Geocode.setLanguage("ko");
@@ -23,17 +24,18 @@ const RegisterFactory = ({ userObj, codeNum }) => {
   const [GPSlong, setGPSLong] = useState([]); //경도
   const [address, setAddress] = useState(""); //주소변환
   const [arr, setArr] = useState([]); //지역변환
-  const [isImgMeta, setIsImgMeta] = useState(false);
-  const [load, setLoad] = useState(true);
+  const [isImgMeta, setIsImgMeta] = useState(false); //메타데이터
+  const [load, setLoad] = useState(true); //로딩표시
+  const [admin, setAdmin] = useState(""); //처리자표시
   const meta = useRef(null);
 
   //submit 버튼 클릭 시 이벤트
   const onSubmit = async (event) => {
-    setLoad(false);
     event.preventDefault();
     let attachmentUrl = "";
 
-    if (attachment !== "") {
+    if (attachment !== "" || address !== "") {
+      setLoad(false);
       const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
       const response = await uploadString(
         attachmentRef,
@@ -41,10 +43,9 @@ const RegisterFactory = ({ userObj, codeNum }) => {
         "data_url"
       );
       attachmentUrl = await getDownloadURL(response.ref);
-    }
-    //attachment 유효성검사
-    if (attachmentUrl == "") {
-      alert("이미지 파일은 필수입니다.");
+    } //attachment 유효성검사
+    else {
+      alert("위치 기반 이미지 파일 등록은 필수입니다.");
       window.location.reload();
     }
 
@@ -72,6 +73,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
       attachmentUrl,
       code: 0, //처리코드
       regioncode: test.code, //지역코드
+      StateAdmin: admin,
     };
 
     //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
@@ -131,6 +133,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
 
     //메타데이터 추출
     if (theFile && theFile.name) {
+      console.log(theFile);
       EXIF.getData(theFile, function () {
         let exifData = EXIF.pretty(this);
         let gpsLa = EXIF.getTag(this, "GPSLatitude");
@@ -186,7 +189,9 @@ const RegisterFactory = ({ userObj, codeNum }) => {
           }
           setGPSLong(b);
           setIsImgMeta(true);
+          setFileData(a, b);
         } else {
+          console.log(date);
           alert(
             "[오류] 사진의 위치정보가 존재하지 않습니다.\n\n ㅇ 위치기반 재촬영 방법 \n Android : 1. 설정>위치>사용 활성화 \n 2. 카메라>좌측 톱니바퀴 아이콘>위치 태그 활성화 \n iOS : 설정>카메라>포맷>높은 호환성>재촬영 후 사진 보관함에서 사진 선택"
           );
@@ -194,7 +199,6 @@ const RegisterFactory = ({ userObj, codeNum }) => {
           // window.location.reload();
         }
         //위경도 기반 주소변환 실행
-        setFileData(a, b);
       });
     }
   };
@@ -239,9 +243,10 @@ const RegisterFactory = ({ userObj, codeNum }) => {
 
   //clear 버튼 클릭 시
   const onClearAttachment = () => {
-    setAttachment(null);
+    setAttachment("");
     setGongsa(null);
     setIsImgMeta(false);
+    setAddress("");
     fileInput.current.value = null;
   };
 
