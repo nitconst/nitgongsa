@@ -71,6 +71,7 @@ const ReadGongsa = ({ userObj, codeNum }) => {
             gongsaObj={gongsa}
             key={gongsa.docKey}
             userObj={userObj}
+            codeNum={codeNum}
             isOwner={gongsa.createdId === userObj.uid}
           />
         ))}
