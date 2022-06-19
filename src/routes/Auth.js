@@ -3,11 +3,13 @@ import { authService } from "fbase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import Lottie from "react-lottie";
 import mainAnimationData from "lotties/auth-construction.json";
+import loadingAnimationData from "lotties/loading-construction.json";
 
 const Auth = () => {
   const [phoneNumber, setPhonenumber] = useState("");
   const [codeNumber, setCodeNumber] = useState("");
   const [isSendSMS, setIsSendSms] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const appVerifier = window.recaptchaVerifier;
   const phoneNumberTest = "+16505551234";
   const testVerificationCode = "123456";
@@ -16,6 +18,15 @@ const Auth = () => {
     loop: true,
     autoplay: true,
     animationData: mainAnimationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
+  const defaultOptions2 = {
+    loop: true,
+    autoplay: true,
+    animationData: loadingAnimationData,
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
@@ -51,12 +62,14 @@ const Auth = () => {
     //   {},
     //   authService
     // );
+    setIsLoading(true);
     signInWithPhoneNumber(authService, "+82" + phoneNumber, appVerifier)
       .then((confirmationResult) => {
         setIsSendSms(true);
         // SMS sent. Prompt user to type the code from the message, then sign the
         // user in with confirmationResult.confirm(code).
         window.confirmationResult = confirmationResult;
+        setIsLoading(false);
         // ...
       })
       .catch((error) => {
@@ -94,7 +107,11 @@ const Auth = () => {
     <>
       <div className="auth-container">
         <div className="content">
-          <h1>사외공사 간편신고 웹</h1>
+          <span class="tag is-warning">사외공사장 간편신고 웹</span>
+        </div>
+
+        <div className="content">
+          <h1>여기 공사</h1>
         </div>
         <Lottie options={defaultOptions} height={200} width={200} />
         <div className="field is-grouped">
@@ -103,7 +120,7 @@ const Auth = () => {
               className="input"
               name="phone"
               type="phone"
-              placeholder="'-'없이 입력'"
+              placeholder="'-'없이 전화번호 입력'"
               value={phoneNumber}
               onChange={onChanged}
             />
@@ -113,6 +130,11 @@ const Auth = () => {
               로그인
             </a>
           </p>
+          <div>
+            {isLoading && (
+              <Lottie options={defaultOptions2} height={60} width={60} />
+            )}
+          </div>
         </div>
 
         <>
