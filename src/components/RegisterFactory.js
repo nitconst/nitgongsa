@@ -164,7 +164,13 @@ const RegisterFactory = ({ userObj, codeNum }) => {
           console.log(la, long, gpsLaRef, gpsLongRef);
 
           //사진 시각 정보 설정
-          setDate(EXIF.getTag(this, "DateTime"));
+          const dateFirst = EXIF.getTag(this, "DateTime")
+            .split(" ")[0]
+            .replaceAll(":", "-");
+          const dateLast = EXIF.getTag(this, "DateTime")
+            .split(" ")[1]
+            .substring(-1, 5);
+          setDate(dateFirst + " " + dateLast);
 
           //ref 조건 별 위경도 계산
           if (gpsLaRef == "N") {
