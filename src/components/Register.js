@@ -11,20 +11,20 @@ const Register = ({ userObj, codeNum }) => {
   return (
     <div className="content">
       <div className="box">
-        <div className="box-header">
+        <div className="box-header" onClick={toggleHide}>
           <span className="icon">
-            <i className="fa-solid fa-pen is-large"></i>
+            <i className="fas fa-plus is-large"></i>
           </span>
           <p className="box-header-text">공사정보 간편신고</p>
-          <div className="div-arrow" onClick={toggleHide}>
+          <div className="div-arrow">
             <span className="icon">
               {isHiding ? (
                 <>
-                  <i className="fa-solid fa-angle-down" />
+                  <i className="fas fa-angle-down" />
                 </>
               ) : (
                 <>
-                  <i className="fa-solid fa-angle-right" />
+                  <i className="fas fa-angle-right" />
                 </>
               )}
             </span>
