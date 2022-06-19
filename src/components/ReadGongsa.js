@@ -87,7 +87,7 @@ const ReadGongsa = ({ userObj, codeNum }) => {
       <div className="boxForm box">
         <div className="box-header">
           <span className="icon">
-            <i className="fa-solid fa-list-check is-large"></i>
+            <i className="fas fa-list is-large"></i>
           </span>
           <p className="box-header-text">공사신고 리스트</p>
         </div>

@@ -398,11 +398,11 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
                       <span className="icon">
                         {isDetail ? (
                           <>
-                            <i className="fa-solid fa-lg fa-angle-down" />
+                            <i className="fas fa-angle-down" />
                           </>
                         ) : (
                           <>
-                            <i className="fa-solid fa-lg fa-angle-right" />
+                            <i className="fas fa-angle-right"></i>
                           </>
                         )}
                       </span>
@@ -445,11 +445,11 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
                           <span className="icon">
                             {isDetail ? (
                               <>
-                                <i className="fa-solid fa-angle-down" />
+                                <i className="fas fa-angle-down" />
                               </>
                             ) : (
                               <>
-                                <i className="fa-solid fa-angle-right" />
+                                <i className="fas fa-angle-right" />
                               </>
                             )}
                           </span>
