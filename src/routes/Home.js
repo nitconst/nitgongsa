@@ -32,7 +32,7 @@ const Home = ({ userObj, codeNum }) => {
       <div className="container is-mobile">
         <section className="hero is-small is-link">
           <div className="hero-body">
-            <p className="title">사외공사 간편신고 웹</p>
+            <p className="title">여기 공사</p>
             <p className="subtitle">
               스마트폰 카메라 촬영으로 공사 간편신고가 가능한 Web입니다.
             </p>
