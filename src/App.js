@@ -84,6 +84,8 @@ const App = () => {
     });
   }, []);
 
+  //ㅎㅇ
+
   const refreshUser = () => {
     const user = authService.currentUser;
     setUserObj({
