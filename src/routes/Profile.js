@@ -19,7 +19,7 @@ const Profile = ({ userObj }) => {
       const querySnapshot = await getDocs(q);
       const gongsaArr = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data(),
+        ...doc.data(), //합쳐서 보여줌
       }));
       setMyGongsa(gongsaArr);
     }

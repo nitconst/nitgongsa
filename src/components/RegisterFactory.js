@@ -37,7 +37,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
     if (attachment !== "" || address !== "") {
       if (GPSla == NaN) {
         alert("위치 기반 이미지 파일 등록은 필수입니다.");
-        window.location.reload();
+        onClearAttachment();
       } else {
         setLoad(false);
         const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
@@ -47,46 +47,45 @@ const RegisterFactory = ({ userObj, codeNum }) => {
           "data_url"
         );
         attachmentUrl = await getDownloadURL(response.ref);
+
+        //지역코드 유효성검사
+        if (test == undefined) {
+          test = {
+            code: "999",
+            region: "기타",
+          };
+        }
+
+        //게시글 삭제,수정을 위한 고유키 값 부여
+        const key = uuidv4();
+
+        //DB저장 필드
+        const gongsaObj = {
+          text: gongsa,
+          createdAt: date,
+          GPSLatitude: GPSla,
+          GPSLongitude: GPSlong,
+          addr: address,
+          docKey: key,
+          phone: userObj.displayName,
+          createdId: userObj.uid,
+          attachmentUrl,
+          code: 0, //처리코드
+          regioncode: test.code, //지역코드
+          StateAdmin: admin,
+        };
+
+        //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
+        await setDoc(doc(dbService, "gongsa", key), gongsaObj);
+        setGongsa("");
+        setAttachment("");
+
+        window.location.reload();
       }
-    } //attachment 유효성검사
-    {
+    } else {
       alert("위치 기반 이미지 파일 등록은 필수입니다.");
-      window.location.reload();
+      onClearAttachment();
     }
-
-    //지역코드 유효성검사
-    if (test == undefined) {
-      test = {
-        code: "999",
-        region: "기타",
-      };
-    }
-
-    //게시글 삭제,수정을 위한 고유키 값 부여
-    const key = uuidv4();
-
-    //DB저장 필드
-    const gongsaObj = {
-      text: gongsa,
-      createdAt: date,
-      GPSLatitude: GPSla,
-      GPSLongitude: GPSlong,
-      addr: address,
-      docKey: key,
-      phone: userObj.displayName,
-      createdId: userObj.uid,
-      attachmentUrl,
-      code: 0, //처리코드
-      regioncode: test.code, //지역코드
-      StateAdmin: admin,
-    };
-
-    //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
-    await setDoc(doc(dbService, "gongsa", key), gongsaObj);
-    setGongsa("");
-    setAttachment("");
-
-    window.location.reload();
   };
 
   const onChange = (event) => {
