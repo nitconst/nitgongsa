@@ -35,7 +35,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
     let attachmentUrl = "";
 
     if (attachment !== "" || address !== "") {
-      if (GPSla == NaN) {
+      if (isNaN(GPSla)) {
         alert("위치 기반 이미지 파일 등록은 필수입니다.");
         onClearAttachment();
       } else {
