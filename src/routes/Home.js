@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import Register from "components/Register";
 import ReadGongsa from "components/ReadGongsa";
+import UserType from "components/UserType";
 
 const Home = ({ userObj, codeNum }) => {
   const [gongsa, setGongsa] = useState([]);
@@ -77,21 +78,7 @@ const Home = ({ userObj, codeNum }) => {
             <div className="content">
               <h1>여기 공사</h1>
             </div>
-
-            <div class="dropdown">
-              <div class="dropdown-trigger">
-                <button
-                  class="button"
-                  aria-haspopup="true"
-                  aria-controls="dropdown-menu"
-                >
-                  <span>Dropdown button</span>
-                  <span class="icon is-small">
-                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                  </span>
-                </button>
-              </div>
-            </div>
+            <UserType userObj={userObj} codeNum={codeNum} />
           </div>
         </div>
       )}
