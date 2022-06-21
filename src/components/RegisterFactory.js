@@ -34,7 +34,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
     event.preventDefault();
     let attachmentUrl = "";
 
-    if (attachment !== "" || address !== "") {
+    if (attachment !== "" || GPSla !== "NaN") {
       setLoad(false);
       const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
       const response = await uploadString(
