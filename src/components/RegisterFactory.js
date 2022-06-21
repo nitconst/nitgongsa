@@ -34,17 +34,22 @@ const RegisterFactory = ({ userObj, codeNum }) => {
     event.preventDefault();
     let attachmentUrl = "";
 
-    if (attachment !== "" || GPSla !== "NaN") {
-      setLoad(false);
-      const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
-      const response = await uploadString(
-        attachmentRef,
-        attachment,
-        "data_url"
-      );
-      attachmentUrl = await getDownloadURL(response.ref);
+    if (attachment !== "" || address !== "") {
+      if (GPSla == NaN) {
+        alert("위치 기반 이미지 파일 등록은 필수입니다.");
+        window.location.reload();
+      } else {
+        setLoad(false);
+        const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+        const response = await uploadString(
+          attachmentRef,
+          attachment,
+          "data_url"
+        );
+        attachmentUrl = await getDownloadURL(response.ref);
+      }
     } //attachment 유효성검사
-    else {
+    {
       alert("위치 기반 이미지 파일 등록은 필수입니다.");
       window.location.reload();
     }
