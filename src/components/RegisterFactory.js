@@ -34,55 +34,50 @@ const RegisterFactory = ({ userObj, codeNum }) => {
     event.preventDefault();
     let attachmentUrl = "";
 
-    //hi
+    //하이루
     if (attachment !== "" || address !== "") {
-      if (isNaN(GPSla)) {
-        alert("위치 기반 이미지 파일 등록은 필수입니다.");
-        onClearAttachment();
-      } else {
-        setLoad(false);
-        const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
-        const response = await uploadString(
-          attachmentRef,
-          attachment,
-          "data_url"
-        );
-        attachmentUrl = await getDownloadURL(response.ref);
+      setLoad(false);
+      const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+      const response = await uploadString(
+        attachmentRef,
+        attachment,
+        "data_url"
+      );
+      attachmentUrl = await getDownloadURL(response.ref);
 
-        //지역코드 유효성검사
-        if (test == undefined) {
-          test = {
-            code: "999",
-            region: "기타",
-          };
-        }
-
-        //게시글 삭제,수정을 위한 고유키 값 부여
-        const key = uuidv4();
-
-        //DB저장 필드
-        const gongsaObj = {
-          text: gongsa,
-          createdAt: date,
-          GPSLatitude: GPSla,
-          GPSLongitude: GPSlong,
-          addr: address,
-          docKey: key,
-          phone: userObj.displayName,
-          createdId: userObj.uid,
-          attachmentUrl,
-          code: 0, //처리코드
-          regioncode: test.code, //지역코드
-          StateAdmin: admin,
+      //지역코드 유효성검사
+      if (test == undefined) {
+        test = {
+          code: "999",
+          region: "기타",
         };
-
-        //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
-        await setDoc(doc(dbService, "gongsa", key), gongsaObj);
-        setGongsa("");
-        setAttachment("");
-
-        window.location.reload();
       }
+
+      //게시글 삭제,수정을 위한 고유키 값 부여
+      const key = uuidv4();
+
+      //DB저장 필드
+      const gongsaObj = {
+        text: gongsa,
+        createdAt: date,
+        GPSLatitude: GPSla,
+        GPSLongitude: GPSlong,
+        addr: address,
+        docKey: key,
+        phone: userObj.displayName,
+        createdId: userObj.uid,
+        attachmentUrl,
+        code: 0, //처리코드
+        regioncode: test.code, //지역코드
+        StateAdmin: admin,
+      };
+
+      //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
+      await setDoc(doc(dbService, "gongsa", key), gongsaObj);
+      setGongsa("");
+      setAttachment("");
+
+      window.location.reload();
     } else {
       alert("위치 기반 이미지 파일 등록은 필수입니다.");
       onClearAttachment();
