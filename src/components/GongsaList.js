@@ -215,7 +215,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
   const handleSubmit = async (key) => {
     setLoad(false);
     let attachmentUrl = "";
-    if (attachment !== "") {
+    if (attachment !== "" || address !== "") {
       await deleteObject(ref(storageService, gongsaObj.attachmentUrl));
       const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
       const response = await uploadString(
