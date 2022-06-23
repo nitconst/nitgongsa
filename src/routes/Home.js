@@ -15,7 +15,7 @@ import UserType from "components/UserType";
 
 const Home = ({ userObj, codeNum }) => {
   const [gongsa, setGongsa] = useState([]);
-  const [isUser, setIsUser] = useState(true);
+  const [isUser, setIsUser] = useState(false);
 
   useEffect(() => {
     const q = query(
@@ -72,11 +72,14 @@ const Home = ({ userObj, codeNum }) => {
         <div>
           <div className="container">
             <div className="content">
-              <span class="tag is-warning">사외공사장 간편신고 웹</span>
+              <span class="tag is-warning">사용자 타입 설정</span>
             </div>
 
             <div className="content">
-              <h1>여기 공사</h1>
+              <h1>
+                <p>안녕하세요!</p>
+              </h1>
+              <h2>원활한 신고 관리를 위해 사용자 정보를 설정해주세요.</h2>
             </div>
             <UserType userObj={userObj} codeNum={codeNum} />
           </div>
