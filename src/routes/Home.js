@@ -42,13 +42,10 @@ const Home = ({ userObj, codeNum }) => {
       console.log(typearr);
 
       if (typearr == "") {
+        setIsUser(false);
         console.log("메롱");
       }
     });
-
-    // user 콜렉션 where절로 가져와서 setIsUser
-    // ......
-    //
   }, []);
 
   return (
@@ -72,14 +69,13 @@ const Home = ({ userObj, codeNum }) => {
         <div>
           <div className="container">
             <div className="content">
-              <span class="tag is-warning">사용자 타입 설정</span>
-            </div>
-
-            <div className="content">
               <h1>
                 <p>안녕하세요!</p>
               </h1>
-              <h2>원활한 신고 관리를 위해 사용자 정보를 설정해주세요.</h2>
+              <h3>
+                <p>원활한 신고 관리를 위해</p> 최초 1회 사용자 정보 설정이
+                필요합니다.
+              </h3>
             </div>
             <UserType userObj={userObj} codeNum={codeNum} />
           </div>
