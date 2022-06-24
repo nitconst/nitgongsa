@@ -19,7 +19,7 @@ const ReadGongsa = ({ userObj, codeNum }) => {
   const [queryObject, setQueryObject] = useState(
     query(collection(dbService, "gongsa"), orderBy("createdAt", "desc"))
   );
-
+  console.log(codeNum);
   // usePagination 활용 페이지 구현 페이지당 5개씩
   const { items, isLoading, isStart, isEnd, getPrev, getNext } = usePagination(
     queryObject,
