@@ -1,17 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, Link } from "react-router-dom";
 import UserType from "./UserType";
+import {
+  collection,
+  addDoc,
+  query,
+  where,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
+import { dbService } from "fbase";
 
 //isuser 삼항연산자
 
-const Navigation = () => {
+const Navigation = ({ userObj }) => {
   const [isType, setIsType] = useState(true);
-
+  console.log(userObj);
   useEffect(() => {
-    //유저상태변화 정보
-    if (UserType) {
-      setIsType(false);
-    }
+    const type = query(
+      collection(dbService, "usertype"),
+      where("phone", "==", userObj.displayName)
+    );
+    onSnapshot(type, (snapshot) => {
+      const typearr = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(typearr);
+
+      if (typearr == "") {
+        setIsType(false);
+        console.log("메롱");
+      }
+    });
   }, []);
 
   return (

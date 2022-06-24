@@ -26,7 +26,7 @@ export default function AppRouter({
         <Routes>
           {isLoggedIn ? (
             <>
-              <Route path="/" element={<Navigation />}>
+              <Route path="/" element={<Navigation userObj={userObj} />}>
                 <Route
                   index
                   element={<Home userObj={userObj} codeNum={codeNum} />}

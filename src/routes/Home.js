@@ -15,7 +15,7 @@ import UserType from "components/UserType";
 
 const Home = ({ userObj, codeNum }) => {
   const [gongsa, setGongsa] = useState([]);
-  const [isUser, setIsUser] = useState(false);
+  const [isUser, setIsUser] = useState(true);
 
   useEffect(() => {
     const q = query(
@@ -67,7 +67,7 @@ const Home = ({ userObj, codeNum }) => {
         </div>
       ) : (
         <div>
-          <div className="container">
+          <div className="container is-mobile">
             <div className="content">
               <h1>
                 <p>안녕하세요!</p>

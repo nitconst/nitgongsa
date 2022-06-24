@@ -83,7 +83,7 @@ const UserType = ({ userObj }) => {
         <div class="tile is-parent">
           <p>
             <article class="tile is-child ">
-              <Lottie options={kt} height={200} width={200} />
+              <Lottie options={kt} height={150} width={150} />
             </article>
           </p>
           <button
@@ -98,7 +98,7 @@ const UserType = ({ userObj }) => {
 
         <div class="tile is-parent">
           <article class="tile is-child">
-            <Lottie options={Parters} height={200} width={200} />
+            <Lottie options={Parters} height={150} width={150} />
           </article>
 
           <button
@@ -113,7 +113,7 @@ const UserType = ({ userObj }) => {
 
         <div class="tile is-parent">
           <article class="tile is-child">
-            <Lottie options={poclain} height={200} width={200} />
+            <Lottie options={poclain} height={140} width={140} />
           </article>
           <button
             className="button is-large is-fullwidth is-child notification is-link"
