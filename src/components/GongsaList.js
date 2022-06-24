@@ -42,7 +42,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
   const [arr, setArr] = useState(gongsaObj.addr.split(" ")); //지역변환
   const meta = useRef(null);
   const [load, setLoad] = useState(true);
-
+  console.log(codeNum);
   const code = [
     { code: "0", status: "신고" },
     { code: "1", status: "처리 중" },
@@ -222,7 +222,8 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
   const handleSubmit = async (key) => {
     setLoad(false);
     let attachmentUrl = "";
-    if (attachment !== "" || address !== "") {
+    if (attachment !== "") {
+      setLoad(false);
       await deleteObject(ref(storageService, gongsaObj.attachmentUrl));
       const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
       const response = await uploadString(
@@ -231,10 +232,8 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
         "data_url"
       );
       attachmentUrl = await getDownloadURL(response.ref);
-      console.log(attachmentUrl);
-
+      console.log(codeNum);
       let test = codeNum.find((codeNum) => {
-        console.log(codeNum);
         return codeNum.region === arr[2];
       });
       console.log(test);
