@@ -34,7 +34,11 @@ export default function AppRouter({
                 <Route
                   path="profile"
                   element={
-                    <Profile userObj={userObj} refreshUser={refreshUser} />
+                    <Profile
+                      userObj={userObj}
+                      refreshUser={refreshUser}
+                      codeNum={codeNum}
+                    />
                   }
                 />
                 {/* Using path="*"" means "match anything", so this route

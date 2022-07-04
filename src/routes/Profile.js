@@ -4,7 +4,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { onLog } from "@firebase/app";
 import GongsaList from "components/GongsaList";
 
-const Profile = ({ userObj }) => {
+const Profile = ({ userObj, codeNum }) => {
   console.log(userObj);
   const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
   const [myGongsa, setMyGongsa] = useState([]);
@@ -19,7 +19,7 @@ const Profile = ({ userObj }) => {
       const querySnapshot = await getDocs(q);
       const gongsaArr = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data(),
+        ...doc.data(), //합쳐서 보여줌
       }));
       setMyGongsa(gongsaArr);
     }
@@ -47,6 +47,7 @@ const Profile = ({ userObj }) => {
               gongsaObj={gongsa}
               key={gongsa.docKey}
               userObj={userObj}
+              codeNum={codeNum}
               isOwner={gongsa.createdId === userObj.uid}
             />
           ))}
