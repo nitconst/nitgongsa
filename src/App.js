@@ -3,6 +3,7 @@ import AppRouter from "components/Router";
 import { authService } from "fbase";
 import Lottie from "react-lottie";
 import loadingAnimationData from "lotties/loading-construction.json";
+import { ajaxTransport } from "jquery";
 
 const App = () => {
   const [init, setInit] = useState(false);
@@ -76,6 +77,7 @@ const App = () => {
         setUserObj({
           displayName: user.phoneNumber, //로그인 시 폰 넘버
           uid: user.uid, //파이어베이스 제공 식별자
+          code : ajaxTransport.code
         });
       } else {
         setIsLoggedIn(false);

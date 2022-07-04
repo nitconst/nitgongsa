@@ -29,7 +29,7 @@ const Home = ({ userObj, codeNum }) => {
 
     // user 콜렉션 where절로 가져와서 setIsUser
     // ......
-    //
+    ///
   }, []);
 
   return (
