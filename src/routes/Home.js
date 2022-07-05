@@ -18,18 +18,6 @@ const Home = ({ userObj, codeNum }) => {
   const [isUser, setIsUser] = useState(true);
 
   useEffect(() => {
-    const q = query(
-      collection(dbService, "gongsa"), //gongsa(collection name)
-      orderBy("createdAt", "desc")
-    );
-    onSnapshot(q, (snapshot) => {
-      const gongsaArr = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setGongsa(gongsaArr);
-    });
-
     const type = query(
       collection(dbService, "usertype"),
       where("phone", "==", userObj.displayName)
@@ -42,13 +30,10 @@ const Home = ({ userObj, codeNum }) => {
       console.log(typearr);
 
       if (typearr == "") {
+        setIsUser(false);
         console.log("메롱");
       }
     });
-
-    // user 콜렉션 where절로 가져와서 setIsUser
-    // ......
-    ///
   }, []);
 
   return (
@@ -64,19 +49,26 @@ const Home = ({ userObj, codeNum }) => {
                 </p>
               </div>
             </section>
+            <article class="message is-info is-small">
+              <div class="message-body">
+                일정 횟수 신고 시 소정의 상품을 등록된 번호로 드립니다.
+              </div>
+            </article>
             <Register userObj={userObj} codeNum={codeNum} />
             <ReadGongsa userObj={userObj} codeNum={codeNum} />
           </div>
         </div>
       ) : (
         <div>
-          <div className="container">
+          <div className="container is-mobile">
             <div className="content">
-              <span class="tag is-warning">사외공사장 간편신고 웹</span>
-            </div>
-
-            <div className="content">
-              <h1>여기 공사</h1>
+              <h1>
+                <p>안녕하세요!</p>
+              </h1>
+              <h3>
+                <p>원활한 신고 관리를 위해</p> 최초 1회 사용자 정보 설정이
+                필요합니다.
+              </h3>
             </div>
             <UserType userObj={userObj} codeNum={codeNum} />
           </div>

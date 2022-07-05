@@ -60,6 +60,12 @@ const App = () => {
     { code: "999", region: "---기타---" },
   ];
 
+  const userNum = [
+    { code: "001", type: "임직원" },
+    { code: "002", type: "협력사" },
+    { code: "003", type: "오거크레인/포크레인 기사" },
+  ];
+
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -85,8 +91,6 @@ const App = () => {
       setInit(true);
     });
   }, []);
-
-  //ㅎㅇ
 
   const refreshUser = () => {
     const user = authService.currentUser;
