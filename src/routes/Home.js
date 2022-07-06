@@ -12,6 +12,7 @@ import {
 import Register from "components/Register";
 import ReadGongsa from "components/ReadGongsa";
 import UserType from "components/UserType";
+import Footer from "components/Footer";
 
 const Home = ({ userObj, codeNum }) => {
   const [gongsa, setGongsa] = useState([]);
@@ -49,19 +50,15 @@ const Home = ({ userObj, codeNum }) => {
                 </p>
               </div>
             </section>
-            <article class="message is-info is-small">
-              <div class="message-body">
-                일정 횟수 신고 시 소정의 상품을 등록된 번호로 드립니다.
-              </div>
-            </article>
             <Register userObj={userObj} codeNum={codeNum} />
             <ReadGongsa userObj={userObj} codeNum={codeNum} />
+            <Footer />
           </div>
         </div>
       ) : (
         <div>
           <div className="container is-mobile">
-            <div className="content">
+            <div className="content is-centered">
               <h1>
                 <p>안녕하세요!</p>
               </h1>
