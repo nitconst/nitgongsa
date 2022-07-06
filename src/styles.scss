@@ -8,7 +8,7 @@ body {
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-size: 14px;
   color: black;
-  height: 100vh;
+  height: 100%;
 }
 
 .container {
@@ -155,4 +155,12 @@ body {
 .content-gongsa {
   display: flex;
   flex-direction: row;
+}
+
+.button {
+  color: red;
+}
+
+.content {
+  margin-bottom: 1rem;
 }
