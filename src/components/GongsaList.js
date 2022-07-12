@@ -245,6 +245,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
         };
       }
 
+      let region2 = test.code.substr(0, 1) + "00";
       await updateDoc(doc(dbService, "gongsa", key), {
         text: textEdit,
         createdAt: date,
@@ -255,6 +256,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
         attachmentUrl: attachmentUrl,
         code: selectedItem,
         regioncode: test.code,
+        regioncode2: region2,
       });
     } else if (attachment === "") {
       await updateDoc(doc(dbService, "gongsa", key), {
