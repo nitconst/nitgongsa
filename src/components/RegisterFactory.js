@@ -1,7 +1,15 @@
 // Register 폼 Component
 import React, { useRef, useState } from "react";
 import { dbService, storageService } from "../fbase";
-import { setDoc, doc } from "firebase/firestore";
+import {
+  setDoc,
+  doc,
+  collection,
+  query,
+  where,
+  getDocs,
+  onSnapshot,
+} from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import EXIF from "exif-js";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
@@ -28,13 +36,13 @@ const RegisterFactory = ({ userObj, codeNum }) => {
   const [load, setLoad] = useState(true); //로딩표시
   const [admin, setAdmin] = useState(""); //처리자표시
   const meta = useRef(null);
+  const [usertype, setUsertype] = useState("");
 
   //submit 버튼 클릭 시 이벤트
   const onSubmit = async (event) => {
     event.preventDefault();
     let attachmentUrl = "";
 
-    //하이루
     if (attachment !== "" || address !== "") {
       setLoad(false);
       const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
@@ -53,6 +61,9 @@ const RegisterFactory = ({ userObj, codeNum }) => {
         };
       }
 
+      //regioncode2 추가
+      let region2 = test.code.substr(0, 1) + "00";
+
       //게시글 삭제,수정을 위한 고유키 값 부여
       const key = uuidv4();
 
@@ -70,6 +81,8 @@ const RegisterFactory = ({ userObj, codeNum }) => {
         code: 0, //처리코드
         regioncode: test.code, //지역코드
         StateAdmin: admin,
+        Usertype: usertype,
+        regioncode2: region2,
       };
 
       //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
@@ -130,6 +143,19 @@ const RegisterFactory = ({ userObj, codeNum }) => {
     } catch (error) {
       console.log(error);
     }
+
+    //usercode 가져오기
+    const type = query(
+      collection(dbService, "usertype"),
+      where("phone", "==", userObj.displayName)
+    );
+    onSnapshot(type, (snapshot) => {
+      const typearr = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+      }));
+      console.log(typearr[0].type);
+      setUsertype(typearr[0].type);
+    });
 
     //메타데이터 추출
     if (theFile && theFile.name) {

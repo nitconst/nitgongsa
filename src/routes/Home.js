@@ -19,6 +19,7 @@ const Home = ({ userObj, codeNum }) => {
   const [isUser, setIsUser] = useState(true);
 
   useEffect(() => {
+    //user 소속별 type 설정
     const type = query(
       collection(dbService, "usertype"),
       where("phone", "==", userObj.displayName)
@@ -76,3 +77,5 @@ const Home = ({ userObj, codeNum }) => {
 };
 
 export default Home;
+
+//로컬 가져와서 저장 및 비교

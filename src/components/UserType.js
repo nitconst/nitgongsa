@@ -5,17 +5,6 @@ import Lottie from "react-lottie";
 import mainAnimationData from "lotties/auth-construction.json";
 import Employee from "lotties/69047-vacation.json";
 import Partner from "lotties/95720-business-partners.json";
-import {
-  collection,
-  addDoc,
-  query,
-  where,
-  onSnapshot,
-  orderBy,
-} from "firebase/firestore";
-import Register from "components/Register";
-import ReadGongsa from "components/ReadGongsa";
-import { async } from "@firebase/util";
 
 const UserType = ({ userObj }) => {
   const [selectedItem, setSelectedItem] = useState("");
@@ -73,7 +62,6 @@ const UserType = ({ userObj }) => {
 
     //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
     await setDoc(doc(dbService, "usertype", key), Codeobj);
-
     window.location.reload();
   };
 
