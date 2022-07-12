@@ -42,7 +42,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
   const [arr, setArr] = useState(gongsaObj.addr.split(" ")); //지역변환
   const meta = useRef(null);
   const [load, setLoad] = useState(true);
-  console.log(codeNum);
+
   const code = [
     { code: "0", status: "신고" },
     { code: "1", status: "처리 중" },

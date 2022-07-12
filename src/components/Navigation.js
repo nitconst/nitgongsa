@@ -15,7 +15,7 @@ import { dbService } from "fbase";
 
 const Navigation = ({ userObj }) => {
   const [isType, setIsType] = useState(true);
-  console.log(userObj);
+
   useEffect(() => {
     const type = query(
       collection(dbService, "usertype"),
@@ -26,11 +26,9 @@ const Navigation = ({ userObj }) => {
         id: doc.id,
         ...doc.data(),
       }));
-      console.log(typearr);
 
       if (typearr == "") {
         setIsType(false);
-        console.log("메롱");
       }
     });
   }, []);

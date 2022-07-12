@@ -18,7 +18,6 @@ const ExportExcel = ({ selectedItem }) => {
   const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
   useEffect(() => {
-    console.log("dd");
     getGongsaList();
   }, [selectedItem]);
 
