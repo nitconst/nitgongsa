@@ -29,11 +29,9 @@ const Home = ({ userObj, codeNum }) => {
         id: doc.id,
         ...doc.data(),
       }));
-      console.log(typearr);
 
       if (typearr == "") {
         setIsUser(false);
-        console.log("메롱");
       }
     });
   }, []);
