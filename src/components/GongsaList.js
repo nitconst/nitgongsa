@@ -16,7 +16,7 @@ import imageCompression from "browser-image-compression";
 import Lottie from "react-lottie";
 import loadingAnimationData from "lotties/loading-construction.json";
 
-Geocode.setApiKey("AIzaSyBIWmLYzIJmYLxLoRsHchr0OAErLWpKcyI");
+Geocode.setApiKey("AIzaSyC4f6F3KSfqHFYjpS-8ZjkdFhImDtQ-FdI");
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
 Geocode.enableDebug();
