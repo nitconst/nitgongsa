@@ -13,6 +13,7 @@ import Register from "components/Register";
 import ReadGongsa from "components/ReadGongsa";
 import UserType from "components/UserType";
 import Footer from "components/Footer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Home = ({ userObj, codeNum }) => {
   const [gongsa, setGongsa] = useState([]);
@@ -49,11 +50,24 @@ const Home = ({ userObj, codeNum }) => {
                 </p>
               </div>
             </section>
+            <div className="buttons">
+  <button className="button is-danger is-light  is-fullwidth" 
+  onClick={()=>window.location.href="https://order.appdu.kt.co.kr/tracker-kt"}>
+    <span><b>"KT 광케이블 지킴이" 열기</b></span>
+    <span className="icon is-small">
+                <i class="fas fa-arrow-right"></i>
+                </span>
+    </button>
+</div>
             <Register userObj={userObj} codeNum={codeNum} />
             <ReadGongsa userObj={userObj} codeNum={codeNum} />
             <Footer />
+
           </div>
         </div>
+        
+
+
       ) : (
         <div>
           <div className="container is-mobile">
