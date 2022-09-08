@@ -24,6 +24,8 @@ Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
 Geocode.enableDebug();
 
+//table 설계
+
 const RegisterFactory = ({ userObj, codeNum }) => {
   const [gongsa, setGongsa] = useState("");
   const [attachment, setAttachment] = useState("");
