@@ -58,7 +58,7 @@ const Home = ({ userObj, codeNum }) => {
                 <i class="fas fa-arrow-right"></i>
                 </span>
     </button>
-</div>
+</div> 
             <Register userObj={userObj} codeNum={codeNum} />
             <ReadGongsa userObj={userObj} codeNum={codeNum} />
             <Footer />
