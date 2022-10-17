@@ -146,7 +146,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
       }
 
       directSMS();
-      setLoad(true);
+      window.location.reload();
     } else {
       alert("위치 기반 이미지 파일 등록은 필수입니다.");
       onClearAttachment();
