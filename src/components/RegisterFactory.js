@@ -1,5 +1,6 @@
 // Register 폼 Component
 import React, { useRef, useState } from "react";
+import $ from "jquery";
 import { dbService, storageService } from "../fbase";
 import {
   setDoc,
@@ -19,6 +20,8 @@ import Lottie from "react-lottie";
 import loadingAnimationData from "lotties/loading-construction.json";
 import { set } from "react-ga";
 
+import { CONTACT_DATA } from "lib/contact";
+
 Geocode.setApiKey("AIzaSyC4f6F3KSfqHFYjpS-8ZjkdFhImDtQ-FdI");
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
@@ -37,7 +40,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
   const [admin, setAdmin] = useState(""); //처리자표시
   const meta = useRef(null);
   const [usertype, setUsertype] = useState("");
-
+  let phoneList = [];
   //submit 버튼 클릭 시 이벤트
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -90,10 +93,102 @@ const RegisterFactory = ({ userObj, codeNum }) => {
       setGongsa("");
       setAttachment("");
 
-      window.location.reload();
+      // 문자 보내기
+      // const requestOptions = {
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     phone: "01073331262",
+      //     smsbody: "test sms",
+      //   }),
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // };
+      // fetch(
+      //   "https://www.nit-api.shop:5026/insert_sms_submit_ajax.php",
+      //   requestOptions
+      // )
+      //   .then((response) => response.json())
+      //   .then((response) => {
+      //     if (response.token) {
+      //       localStorage.setItem("wtw-token", response.token);
+      //     }
+      //   });
+
+      const keyExists = (obj, key) => {
+        if (!obj || (typeof obj !== "object" && !Array.isArray(obj))) {
+          return false;
+        } else if (obj.hasOwnProperty(key)) {
+          return obj[key];
+        } else if (Array.isArray(obj)) {
+          for (let i = 0; i < obj.length; i++) {
+            const result = keyExists(obj[i], key);
+            if (result) {
+              return obj[i];
+            }
+          }
+        } else {
+          for (const k in obj) {
+            const result = keyExists(obj[k], key);
+            if (result) {
+              return result;
+            }
+          }
+        }
+
+        return false;
+      };
+
+      if (arr[2] == "성남시" || arr[2] == "용인시") {
+        phoneList = keyExists(CONTACT_DATA, arr[3]);
+      } else {
+        phoneList = keyExists(CONTACT_DATA, arr[2]);
+      }
+
+      directSMS();
+      setLoad(true);
     } else {
       alert("위치 기반 이미지 파일 등록은 필수입니다.");
       onClearAttachment();
+    }
+  };
+
+  const directSMS = () => {
+    const url = "https://www.nit-api.shop:5026/insert_sms_submit_ajax.php";
+    const phoneNumber = "01073331262";
+
+    const smsWaitingText =
+      `[여기공사-신고]\n` +
+      // `방문해 주셔서 감사합니다.\n` +
+      `주소 : ` +
+      address;
+    // `입장 순서가 되면 안내해 드리겠습니다.(링크 참조)`;
+
+    if (phoneList) {
+      phoneList.forEach((element) => {
+        console.log(element);
+        $.ajax({
+          url: url,
+          method: "POST",
+          data: {
+            phone: element,
+            smsbody: smsWaitingText,
+          },
+          error: function (request, status, error) {
+            //   alert(
+            //     "code:" +
+            //       request.status +
+            //       "\n" +
+            //       "message:" +
+            //       request.responseText +
+            //       "\n" +
+            //       "error:" +
+            //       error
+            //   );
+            console.log(request.status, request.responseText, error);
+          },
+        });
+      });
     }
   };
 
@@ -371,5 +466,3 @@ const RegisterFactory = ({ userObj, codeNum }) => {
 };
 
 export default RegisterFactory;
-
-//hi
