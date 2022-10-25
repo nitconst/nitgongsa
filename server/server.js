@@ -15,6 +15,7 @@ connect();
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/post", gongsaRouter);
+
 // Parse requests of content-type: application/json
 app.use(bodyParser.json());
 
