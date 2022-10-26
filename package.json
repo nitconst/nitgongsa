@@ -44,9 +44,12 @@
     "webpack": "^4.44.0"
   },
   "scripts": {
-    "start": "nodemon ./server/server.js",
+    "start": "react-scripts start",
     "build": "react-scripts build",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "nodemon ./server/server.js",
+    "client": "npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "eslintConfig": {
     "extends": [
