@@ -5,12 +5,7 @@ const connect = () => {
     mongoose.set("debug", true);
   }
   mongoose.connect(
-    "mongodb://jun9:qwer1234@localhost:27017/admin",
-    {
-      dbName: "nitgongsa",
-      userNewUrlParser: true,
-      useCreateIndex: true,
-    },
+    "mongodb://jun9:qwer1234@127.0.0.1:27017/nitgongsa",
     (error) => {
       if (error) {
         console.log("몽고디비 연결 에러", error);

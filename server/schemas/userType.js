@@ -3,11 +3,13 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const userTypeSchema = new Schema({
   phone: {
-    type: "String",
+    type: String,
     unique: true,
+    required: true,
   },
   type: {
-    type: "String",
+    type: String,
+    required: true,
   },
 });
 

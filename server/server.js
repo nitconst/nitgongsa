@@ -1,23 +1,33 @@
 const express = require("express");
 const path = require("path");
-const bodyParser = require("body-parser");
 
 const connect = require("./schemas");
-const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
-const gongsaRouter = require("./routes/post");
 
 const app = express();
 
 app.set("port", process.env.PORT || 8080);
 connect();
 
-app.use("/", indexRouter);
+app.use(express.json());
+const cors = require("cors");
+app.use(cors());
+app.use(express.urlencoded({ extended: false }));
+
 app.use("/users", usersRouter);
-app.use("/post", gongsaRouter);
 
-// Parse requests of content-type: application/json
-app.use(bodyParser.json());
+app.use((req, res, next) => {
+  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+  error.status = 404;
+  next(error);
+});
 
-// Parse requests of content-type: application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use((err, req, res, next) => {
+  res.locals.message = err.message;
+  res.locals.error = process.env.NODE_ENV !== "production" ? err : {};
+  res.status(err.status || 500);
+});
+
+app.listen(app.get("port"), () => {
+  console.log(app.get("port"), "번 포트에서 대기 중");
+});

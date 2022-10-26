@@ -3,43 +3,43 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const gongsaSchema = new Schema({
   GPSLatitude: {
-    type: "Number",
+    type: Number,
   },
   GPSlongitude: {
-    type: "Number",
+    type: Number,
   },
   Usertype: {
-    type: "String",
+    type: String,
   },
   addr: {
-    type: "String",
+    type: String,
   },
   attachmentUrl: {
-    type: "String",
+    type: String,
   },
   code: {
-    type: "Number",
+    type: Number,
   },
   createdAt: {
-    type: "String",
+    type: String,
   },
   createdId: {
-    type: "String",
+    type: String,
   },
   docKey: {
-    type: "String",
+    type: String,
   },
   phone: {
-    type: "String",
+    type: String,
   },
   regioncode: {
-    type: "String",
+    type: String,
   },
   regioncode2: {
-    type: "String",
+    type: String,
   },
   text: {
-    type: "String",
+    type: String,
   },
 });
 
