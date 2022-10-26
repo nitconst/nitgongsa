@@ -10,6 +10,6 @@ RUN npm install
 
 ENV NODE_ENV development
 
-EXPOSE 5001
+EXPOSE 8080
 
 CMD [ "npm", "start" ]

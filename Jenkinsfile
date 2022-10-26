@@ -22,6 +22,6 @@ node {
 
         stage('Deploy') {
             sh "echo 'Deply Development Server'"
-            sh "docker run --name nit-gongsa -d -p 5001:5001 172.16.200.33:5000/gongsa_real"
+            sh "docker run --name nit-gongsa -d -p 8080:5001 172.16.200.33:5000/gongsa_real"
         }
     }
