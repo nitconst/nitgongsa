@@ -15,8 +15,9 @@ import {
 import { dbService } from "fbase";
 import GongsaList from "./GongsaList";
 import ExportExcel from "./ExportExcel";
-import firebase from "firebase/compat";
 import axios from "axios";
+
+const backUrl = "http://127.0.0.1:8080/gongsa";
 
 const ReadGongsa = ({ userObj, codeNum }) => {
   const [selectedItem, setSelectedItem] = useState("000");
@@ -99,7 +100,7 @@ const ReadGongsa = ({ userObj, codeNum }) => {
         setList(items);
       });
     };
-    // const data = axios.get("http://127.0.0.1:8080/gongsa");
+    // const data = axios.get(backUrl);
     // console.log(data);
 
     fetchData();
