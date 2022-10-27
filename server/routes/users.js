@@ -4,9 +4,10 @@ const UserType = require("../schemas/userType.js");
 const router = express.Router();
 
 router
-  .route("/users")
+  .route("/")
   // axios.get('/users') 로부터 요청 받음
   .get(async (req, res, next) => {
+    res.send("OK.");
     try {
       const userType = await UserType.find({});
       console.log(userType);

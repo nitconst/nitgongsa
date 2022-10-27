@@ -3,6 +3,7 @@ const path = require("path");
 
 const connect = require("./schemas");
 const usersRouter = require("./routes/users");
+const gongsaRouter = require("./routes/gongsa");
 
 const app = express();
 
@@ -15,6 +16,11 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/users", usersRouter);
+app.use("/gongsa", gongsaRouter);
+
+app.get("/", (req, res, next) => {
+  res.json({ man: "scraa" });
+});
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
