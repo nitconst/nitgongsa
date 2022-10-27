@@ -14,12 +14,13 @@ import {
 } from "firebase/firestore";
 import { dbService } from "fbase";
 import GongsaList from "./GongsaList";
-import { usePagination } from "use-pagination-firestore";
 import ExportExcel from "./ExportExcel";
 import firebase from "firebase/compat";
+import axios from "axios";
 
 const ReadGongsa = ({ userObj, codeNum }) => {
   const [selectedItem, setSelectedItem] = useState("000");
+  // regioncode2 : 정렬을 위한 state, 000은 전체, 001,002,003,004는 지역별
   const [isPc, setIsPC] = useState(false);
   const [queryObject, setQueryObject] = useState(
     query(
@@ -30,7 +31,6 @@ const ReadGongsa = ({ userObj, codeNum }) => {
   );
   const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
-  // usePagination 활용 페이지 구현 페이지당 5개씩
 
   useEffect(() => {
     let filter = "win16|win32|win64|mac|macintel";
@@ -90,6 +90,7 @@ const ReadGongsa = ({ userObj, codeNum }) => {
   const getGongsaData = () => {
     const fetchData = async () => {
       const q = queryObject;
+      console.log(q);
       const unsubscribe = await onSnapshot(q, (querySnapshot) => {
         let items = [];
         querySnapshot.forEach((doc) => {
@@ -98,6 +99,8 @@ const ReadGongsa = ({ userObj, codeNum }) => {
         setList(items);
       });
     };
+    // const data = axios.get("http://127.0.0.1:8080/gongsa");
+    // console.log(data);
 
     fetchData();
   };
