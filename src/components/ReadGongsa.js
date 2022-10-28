@@ -119,6 +119,11 @@ const ReadGongsa = ({ userObj, codeNum }) => {
         setList(items);
       });
     };
+    // axios
+    axios.get(backUrl, { regioncode2: "100" }).then((res) => {
+      console.log(res.data);
+    });
+    // 데이터 받아오기 예시,
     fetchData();
   };
 
