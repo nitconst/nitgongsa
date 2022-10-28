@@ -91,7 +91,6 @@ const ReadGongsa = ({ userObj, codeNum }) => {
   const getGongsaData = () => {
     const fetchData = async () => {
       const q = queryObject;
-      console.log(q);
       const unsubscribe = await onSnapshot(q, (querySnapshot) => {
         let items = [];
         querySnapshot.forEach((doc) => {
@@ -100,8 +99,11 @@ const ReadGongsa = ({ userObj, codeNum }) => {
         setList(items);
       });
     };
-    // const data = axios.get(backUrl);
-    // console.log(data);
+    // axios
+    axios.get(backUrl).then((res) => {
+      console.log(res.data);
+    });
+    // 데이터 받아오기 예시,
 
     fetchData();
   };
@@ -114,7 +116,6 @@ const ReadGongsa = ({ userObj, codeNum }) => {
         querySnapshot.forEach((doc) => {
           items.push({ key: doc.id, ...doc.data() });
         });
-
         setList(items);
       });
     };
