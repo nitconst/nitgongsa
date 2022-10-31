@@ -352,6 +352,8 @@ var callback = function(result, status) {
 geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
   }
 
+  //기존코드 위경도 변경 요함
+
   //clear 버튼 클릭 시
   const onClearAttachment = () => {
     setAttachment("");
