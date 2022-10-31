@@ -18,11 +18,14 @@ import imageCompression from "browser-image-compression";
 import Lottie from "react-lottie";
 import loadingAnimationData from "lotties/loading-construction.json";
 import { set } from "react-ga";
+import axios from "axios";
 
 Geocode.setApiKey("AIzaSyC4f6F3KSfqHFYjpS-8ZjkdFhImDtQ-FdI");
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
 Geocode.enableDebug();
+
+const backUrl = "http://127.0.0.1:8080/gongsa";
 
 //table 설계
 
@@ -88,9 +91,16 @@ const RegisterFactory = ({ userObj, codeNum }) => {
       };
 
       //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
-      await setDoc(doc(dbService, "gongsa", key), gongsaObj);
-      setGongsa("");
-      setAttachment("");
+      // await setDoc(doc(dbService, "gongsa", key), gongsaObj);
+      // setGongsa("");
+      // setAttachment("");
+
+      await axios
+        .post(backUrl, gongsaObj)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {});
 
       window.location.reload();
     } else {
