@@ -8,6 +8,7 @@ const gongsaSchema = new Schema({
   GPSlongitude: {
     type: Number,
   },
+  StateAdmin: { type: String },
   Usertype: {
     type: String,
   },
