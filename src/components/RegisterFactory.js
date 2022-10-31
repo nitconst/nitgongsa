@@ -14,18 +14,15 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import EXIF from "exif-js";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
-import Geocode from "react-geocode";
 import imageCompression from "browser-image-compression";
 import Lottie from "react-lottie";
 import loadingAnimationData from "lotties/loading-construction.json";
 import { set } from "react-ga";
-
 import { CONTACT_DATA } from "lib/contact";
 
-Geocode.setApiKey("AIzaSyC4f6F3KSfqHFYjpS-8ZjkdFhImDtQ-FdI");
-Geocode.setLanguage("ko");
-Geocode.setRegion("kr");
-Geocode.enableDebug();
+const {kakao} = window;
+
+
 
 const RegisterFactory = ({ userObj, codeNum }) => {
   const [gongsa, setGongsa] = useState("");
@@ -332,48 +329,28 @@ const RegisterFactory = ({ userObj, codeNum }) => {
           onClearAttachment();
           // window.location.reload();
         }
-        //위경도 기반 주소변환 실행
       });
     }
   };
 
+
   //주소변환함수
   const setFileData = (a, b) => {
-    console.log(GPSla, GPSlong);
-    Geocode.fromLatLng(String(a), String(b)).then(
-      (response) => {
-        //대한민국 제외 주소 DB 저장
-        setAddress(response.results[0].formatted_address.substr(5));
-        let city, state, country;
-        // let add = response.results[0].formatted_address;
-        // let result = add.substr(5);
-        // console.log(result);
-        for (const element of response.results[0].address_components) {
-          for (let j = 0; j < element.types.length; j++) {
-            switch (element.types[j]) {
-              case "locality":
-                city = element.long_name;
-                break;
-              case "administrative_area_level_1":
-                state = element.long_name;
-                break;
-              case "country":
-                country = element.long_name;
-                break;
-            }
-          }
-          console.log(element);
-        }
+    console.log(a, b);
+    
+//주소변환코드(kakao)
+var geocoder = new kakao.maps.services.Geocoder();
 
-        //배열에 공백 단위로 주소 나눠넣기
-        setArr(response.results[0].formatted_address.split(" "));
-        console.log(city, state, country);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  };
+var coord = new kakao.maps.LatLng(String(a), String(b));
+var callback = function(result, status) {
+    if (status === kakao.maps.services.Status.OK) {
+      setAddress(result[0].address.address_name);
+        console.log(result[0].address.address_name);
+    }
+};
+
+geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+  }
 
   //clear 버튼 클릭 시
   const onClearAttachment = () => {
