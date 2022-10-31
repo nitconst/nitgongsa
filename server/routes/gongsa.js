@@ -80,6 +80,18 @@ router
       .then(() => res.send("OK"))
       .catch((err) => res.status(500).send(err));
     console.log(req.body);
+  })
+  .put((req, res, next) => {
+    console.log(req.body);
+    Gongsa.findOneAndUpdate({ docKey: req.body.docKey }, req.params)
+      .then((todo) => res.send(todo))
+      .catch((err) => res.status(500).send(err));
+  })
+  .delete((req, res, next) => {
+    console.log(req.body);
+    Gongsa.deleteOne({ docKey: req.body.docKey })
+      .then(() => res.sendStatus(200))
+      .catch((err) => res.status(500).send(err));
   });
 
 module.exports = router;

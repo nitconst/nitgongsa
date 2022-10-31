@@ -57,7 +57,6 @@ const RegisterFactory = ({ userObj, codeNum }) => {
         "data_url"
       );
       attachmentUrl = await getDownloadURL(response.ref);
-
       //지역코드 유효성검사
       if (test == undefined) {
         test = {
@@ -97,10 +96,11 @@ const RegisterFactory = ({ userObj, codeNum }) => {
 
       await axios
         .post(backUrl, gongsaObj)
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
+          window.location.reload();
         })
-        .catch(function (error) {});
+        .catch((error) => {});
 
       window.location.reload();
     } else {
