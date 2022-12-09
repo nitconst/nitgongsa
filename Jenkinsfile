@@ -5,7 +5,7 @@ node {
         } 
 
         stage('Build') {
-            sh "echo 'run docker-compose'"
+            sh "echo 'run docker-compose gogo'"
             sh "docker-compose up -d"
         }
 
