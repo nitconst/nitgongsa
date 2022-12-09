@@ -6,7 +6,7 @@ node {
 
         stage('Tests') {
             sh "echo 'test'"
-            sh "pwd"
+            sh "ls"
         } 
 
         // stage('Build') {
