@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  app:
+    build: 
+      dockerfile: ./Dockerfile
+    ports:
+      - 3002:3000
+
+  mongoDB:
+    image: mongo
+    container_name: gongsadb
+    ports:
+      - 27018:27017
+    volumes:
+      - gongsa-mongo:/var/lib/mysql
+    environment: 
+      - MONGO_INITDB_ROOT_USERNAME=jun9
+      - MONGO_INITDB_ROOT_PASSWORD=qwer1234 
+      - MONGO_INITDB_DATABASE=nitgongsa
+
+volumes:
+  gongsa-mongo:

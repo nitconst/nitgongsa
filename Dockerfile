@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:16
 
 LABEL authors="Jun9 Lee <lee.jun9@kt.com>"
 
@@ -10,6 +10,6 @@ RUN npm install
 
 ENV NODE_ENV development
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD [ "npm", "start" ]
