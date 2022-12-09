@@ -1,6 +1,7 @@
 {
-  "compilerOptions": {
+  "compilerOptions":{
     "baseUrl": "src"
   },
-  "includes": ["src"]
+  "includes": ["src"],
+  "exclude": ["node_modules", "server"]
 }

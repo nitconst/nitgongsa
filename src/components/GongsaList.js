@@ -16,6 +16,11 @@ import imageCompression from "browser-image-compression";
 import Lottie from "react-lottie";
 import loadingAnimationData from "lotties/loading-construction.json";
 
+import axios from "axios";
+
+const backUrl = "http://127.0.0.1:8080/gongsa";
+// CRUD API 주소
+
 Geocode.setApiKey("AIzaSyC4f6F3KSfqHFYjpS-8ZjkdFhImDtQ-FdI");
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
@@ -96,7 +101,18 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
   const handleCancle = async (key, index) => {
     const ok = window.confirm("정말 삭제하시겠습니까?");
     if (ok) {
-      await deleteDoc(doc(dbService, "gongsa", key));
+      // 이 부분 대체할것
+      // await deleteDoc(doc(dbService, "gongsa", key));
+      await deleteObject(ref(storageService, gongsaObj.attachmentUrl));
+      await axios
+        .delete(backUrl, { data: { docKey: key } })
+        .then((res) => {
+          console.log(res);
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       await deleteObject(ref(storageService, gongsaObj.attachmentUrl));
       window.location.reload();
     }
@@ -177,7 +193,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
           setDate(dateFirst + " " + dateLast);
 
           //ref 조건 별 위경도 계산
-          if (gpsLaRef == "N") {
+          if (gpsLaRef === "N") {
             a =
               parseInt(la[0]) +
               (60 * parseInt(la[1]) + parseFloat(la[2])) / 3600;
@@ -188,7 +204,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
           }
           setGPSLa(a);
 
-          if (gpsLongRef == "E") {
+          if (gpsLongRef === "E") {
             b =
               parseInt(long[0]) +
               (60 * parseInt(long[1]) + parseFloat(long[2])) / 3600;
@@ -238,7 +254,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
       });
       console.log(test);
 
-      if (test == undefined) {
+      if (test === undefined) {
         test = {
           code: "999",
           region: "기타",
@@ -246,23 +262,65 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
       }
 
       let region2 = test.code.substr(0, 1) + "00";
-      await updateDoc(doc(dbService, "gongsa", key), {
-        text: textEdit,
-        createdAt: date,
-        GPSLatitude: GPSla,
-        GPSLongitude: GPSlong,
-        addr: address,
-        docKey: key,
-        attachmentUrl: attachmentUrl,
-        code: selectedItem,
-        regioncode: test.code,
-        regioncode2: region2,
-      });
+      await axios
+        .put(
+          backUrl,
+          {
+            params: {
+              text: textEdit,
+              createdAt: date,
+              GPSLatitude: GPSla,
+              GPSLongitude: GPSlong,
+              addr: address,
+              docKey: key,
+              attachmentUrl: attachmentUrl,
+              code: selectedItem,
+              regioncode: test.code,
+              regioncode2: region2,
+            },
+          },
+          { data: { docKey: key } }
+        )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      // await updateDoc(doc(dbService, "gongsa", key), {
+      //   text: textEdit,
+      //   createdAt: date,
+      //   GPSLatitude: GPSla,
+      //   GPSLongitude: GPSlong,
+      //   addr: address,
+      //   docKey: key,
+      //   attachmentUrl: attachmentUrl,
+      //   code: selectedItem,
+      //   regioncode: test.code,
+      //   regioncode2: region2,
+      // });
     } else if (attachment === "") {
-      await updateDoc(doc(dbService, "gongsa", key), {
-        text: textEdit,
-        code: Number(selectedItem),
-      });
+      await axios
+        .put(
+          backUrl,
+          {
+            params: {
+              text: textEdit,
+              code: Number(selectedItem),
+            },
+          },
+          { data: { docKey: key } }
+        )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      // await updateDoc(doc(dbService, "gongsa", key), {
+      //   text: textEdit,
+      //   code: Number(selectedItem),
+      // });
     }
 
     window.location.reload();

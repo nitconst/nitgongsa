@@ -1,36 +1,19 @@
 import React, { useEffect, useState } from "react";
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  startAt,
-  endAt,
-  limit,
-  onSnapshot,
-  startAfter,
-  endBefore,
-  limitToLast,
-} from "firebase/firestore";
-import { dbService } from "fbase";
 import GongsaList from "./GongsaList";
-import { usePagination } from "use-pagination-firestore";
 import ExportExcel from "./ExportExcel";
-import firebase from "firebase/compat";
+import axios from "axios";
+
+const backUrl = "http://127.0.0.1:8080/gongsa";
+// 백엔드 주소 + 요청할 디렉토리
 
 const ReadGongsa = ({ userObj, codeNum }) => {
   const [selectedItem, setSelectedItem] = useState("000");
+  // regioncode2 : 정렬을 위한 state, 000은 전체, 001,002,003,004는 지역별
   const [isPc, setIsPC] = useState(false);
-  const [queryObject, setQueryObject] = useState(
-    query(
-      collection(dbService, "gongsa"),
-      orderBy("createdAt", "desc"),
-      limit(5)
-    )
-  );
+  const [queryObject, setQueryObject] = useState({ id: "0" });
+  // 쿼리할 내용에 따라 요청을 구분하기 위한 쿼리오브젝트
   const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
-  // usePagination 활용 페이지 구현 페이지당 5개씩
 
   useEffect(() => {
     let filter = "win16|win32|win64|mac|macintel";
@@ -39,20 +22,12 @@ const ReadGongsa = ({ userObj, codeNum }) => {
     } else {
       setIsPC(true);
     }
-    getGongsaData();
   }, []);
 
   useEffect(() => {
     setPage(1);
     if (selectedItem === "000") {
-      setQueryObject(
-        query(
-          collection(dbService, "gongsa"),
-          orderBy("createdAt", "desc"),
-          limit(5)
-        )
-      );
-      getGongsaData();
+      setQueryObject({ id: "0" });
     } else {
       if (
         selectedItem === "100" ||
@@ -60,25 +35,10 @@ const ReadGongsa = ({ userObj, codeNum }) => {
         selectedItem === "300" ||
         selectedItem === "400"
       ) {
-        setQueryObject(
-          query(
-            collection(dbService, "gongsa"),
-            orderBy("createdAt", "desc"),
-            where("regioncode2", "==", selectedItem),
-            limit(5)
-          )
-        );
+        setQueryObject({ id: "1", regioncode2: selectedItem });
       } else {
-        setQueryObject(
-          query(
-            collection(dbService, "gongsa"),
-            orderBy("createdAt", "desc"),
-            where("regioncode", "==", selectedItem),
-            limit(5)
-          )
-        );
+        setQueryObject({ id: "2", regioncode: selectedItem });
       }
-      getGongsaDataByRegion();
     }
   }, [selectedItem]);
 
@@ -90,28 +50,31 @@ const ReadGongsa = ({ userObj, codeNum }) => {
   const getGongsaData = () => {
     const fetchData = async () => {
       const q = queryObject;
-      const unsubscribe = await onSnapshot(q, (querySnapshot) => {
+      await axios.get(backUrl, { params: q }).then((res) => {
+        // console.log(res.data);
         let items = [];
-        querySnapshot.forEach((doc) => {
-          items.push({ key: doc.id, ...doc.data() });
+        res.data.forEach((doc) => {
+          // console.log(doc);
+          items.push({ key: doc._id, ...doc });
         });
         setList(items);
+        // console.log(items);
       });
     };
-
     fetchData();
   };
 
   const getGongsaDataByRegion = () => {
     const fetchData = async () => {
       const q = queryObject;
-      const unsubscribe = await onSnapshot(q, (querySnapshot) => {
-        const items = [];
-        querySnapshot.forEach((doc) => {
-          items.push({ key: doc.id, ...doc.data() });
+      await axios.get(backUrl, { params: q }).then((res) => {
+        // console.log(res.data);
+        let items = [];
+        res.data.forEach((doc) => {
+          items.push({ key: doc._id, ...doc });
         });
-
         setList(items);
+        // console.log(items);
       });
     };
     fetchData();
@@ -126,32 +89,35 @@ const ReadGongsa = ({ userObj, codeNum }) => {
     ) {
       const str = selectedItem.charAt(0);
       setQueryObject(
-        query(
-          collection(dbService, "gongsa"),
-          orderBy("createdAt", "desc"),
-          where("regioncode2", "==", selectedItem),
-          limit(5),
-          startAfter(item.createdAt)
-        )
+        { id: "3", regioncode2: selectedItem, page: page }
+        // query(
+        //   collection(dbService, "gongsa"),
+        //   orderBy("createdAt", "desc"),
+        //   where("regioncode2", "==", selectedItem),
+        //   limit(5),
+        //   startAfter(item.createdAt)
+        // )
       );
     } else if (selectedItem === "000") {
       setQueryObject(
-        query(
-          collection(dbService, "gongsa"),
-          orderBy("createdAt", "desc"),
-          limit(5),
-          startAfter(item.createdAt)
-        )
+        { id: "4", page: page }
+        // query(
+        //   collection(dbService, "gongsa"),
+        //   orderBy("createdAt", "desc"),
+        //   limit(5),
+        //   startAfter(item.createdAt)
+        // )
       );
     } else {
       setQueryObject(
-        query(
-          collection(dbService, "gongsa"),
-          orderBy("createdAt", "desc"),
-          where("regioncode", "==", selectedItem),
-          limit(5),
-          startAfter(item.createdAt)
-        )
+        { id: "5", regioncode: selectedItem, page: page }
+        // query(
+        //   collection(dbService, "gongsa"),
+        //   orderBy("createdAt", "desc"),
+        //   where("regioncode", "==", selectedItem),
+        //   limit(5),
+        //   startAfter(item.createdAt)
+        // )
       );
     }
     if (list.length === 0) {
@@ -159,14 +125,24 @@ const ReadGongsa = ({ userObj, codeNum }) => {
     } else {
       const fetchNextData = () => {
         const q = queryObject;
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-          const items = [];
-          querySnapshot.forEach((doc) => {
-            items.push({ key: doc.id, ...doc.data() });
+        axios.get(backUrl, { params: q }).then((res) => {
+          // console.log(res.data);
+          let items = [];
+          res.data.forEach((doc) => {
+            items.push({ key: doc._id, ...doc });
           });
           setList(items);
           setPage(page + 1);
+          // console.log(items);
         });
+        // const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        //   const items = [];
+        //   querySnapshot.forEach((doc) => {
+        //     items.push({ key: doc.id, ...doc.data() });
+        //   });
+        //   setList(items);
+        //   setPage(page + 1);
+        // });
       };
       fetchNextData();
     }
@@ -181,45 +157,50 @@ const ReadGongsa = ({ userObj, codeNum }) => {
     ) {
       const str = selectedItem.charAt(0);
       setQueryObject(
-        query(
-          collection(dbService, "gongsa"),
-          orderBy("createdAt", "desc"),
-          where("regioncode2", "==", selectedItem),
-          endBefore(item.createdAt),
-          limitToLast(5)
-        )
+        { id: "6", regioncode2: selectedItem, page: page }
+        // query(
+        //   collection(dbService, "gongsa"),
+        //   orderBy("createdAt", "desc"),
+        //   where("regioncode2", "==", selectedItem),
+        //   endBefore(item.createdAt),
+        //   limitToLast(5)
+        // )
       );
     } else if (selectedItem === "000") {
       setQueryObject(
-        query(
-          collection(dbService, "gongsa"),
-          orderBy("createdAt", "desc"),
-          limit(5),
-          endBefore(item.createdAt),
-          limitToLast(5)
-        )
+        { id: "7", page: page }
+        // query(
+        //   collection(dbService, "gongsa"),
+        //   orderBy("createdAt", "desc"),
+        //   limit(5),
+        //   endBefore(item.createdAt),
+        //   limitToLast(5)
+        // )
       );
     } else {
       setQueryObject(
-        query(
-          collection(dbService, "gongsa"),
-          orderBy("createdAt", "desc"),
-          where("regioncode", "==", selectedItem),
-          limit(5),
-          endBefore(item.createdAt),
-          limitToLast(5)
-        )
+        { id: "8", regioncode: selectedItem, item: item.createdAt, page: page }
+        // query(
+        //   collection(dbService, "gongsa"),
+        //   orderBy("createdAt", "desc"),
+        //   where("regioncode", "==", selectedItem),
+        //   limit(5),
+        //   endBefore(item.createdAt),
+        //   limitToLast(5)
+        // )
       );
     }
     const fetchPreviousData = () => {
       const q = queryObject;
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const items = [];
-        querySnapshot.forEach((doc) => {
-          items.push({ key: doc.id, ...doc.data() });
+      axios.get(backUrl, { params: q }).then((res) => {
+        // console.log(res.data);
+        let items = [];
+        res.data.forEach((doc) => {
+          items.push({ key: doc._id, ...doc });
         });
         setList(items);
         setPage(page - 1);
+        // console.log(items);
       });
     };
     fetchPreviousData();

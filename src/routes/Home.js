@@ -52,8 +52,8 @@ const Home = ({ userObj, codeNum }) => {
             </section>
             <div className="buttons">
   <button className="button is-danger is-light  is-fullwidth" 
-  onClick={()=>window.location.href="https://order.appdu.kt.co.kr/tracker-kt"}>
-    <span><b>"KT 광케이블 지킴이" 열기</b></span>
+  onClick={()=>window.location.href="https://order.appdu.kt.co.kr/tracker-gnsb"}>
+  <span><b>"KT 광케이블 근접조회 서비스" 열기</b></span>
     <span className="icon is-small">
                 <i class="fas fa-arrow-right"></i>
                 </span>
