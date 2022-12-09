@@ -6,7 +6,7 @@ node {
 
         stage('Build') {
             sh "echo 'run docker-compose gogo'"
-            sh "docker-compose up -d"
+            sh "docker-compose build"
         }
 
         // stage('Exchange') {
@@ -14,4 +14,9 @@ node {
         //     sh "docker stop nit-gongsa"
         //     sh "docker rm nit-gongsa"
         // }
+
+        stage('Start') {
+            sh "echo '해치웠나?'"
+            sh "docker-compose up -d"
+        }
     }
