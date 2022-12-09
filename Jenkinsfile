@@ -6,7 +6,7 @@ node {
 
         stage('Build') {
             sh "echo 'run docker-compose'"
-            sh "docker-compose up d"
+            sh "docker-compose up -d"
         }
 
         // stage('Exchange') {
