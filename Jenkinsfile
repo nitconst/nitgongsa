@@ -9,10 +9,10 @@ node {
             sh "ls"
         } 
 
-        // stage('Build') {
-        //     sh "echo 'run docker-compose gogo'"
-        //     sh "docker-compose build"
-        // }
+        stage('Build') {
+            sh "echo 'run docker-compose gogo'"
+            sh "docker-compose up -d"
+        }
 
         // stage('Exchange') {
         //     sh "echo 'Stop Previous Container'"
