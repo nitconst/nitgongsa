@@ -58,7 +58,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
       );
       attachmentUrl = await getDownloadURL(response.ref);
       //지역코드 유효성검사
-      if (test == undefined) {
+      if (test === undefined) {
         test = {
           code: "999",
           region: "기타",
@@ -100,7 +100,9 @@ const RegisterFactory = ({ userObj, codeNum }) => {
           console.log(response);
           window.location.reload();
         })
-        .catch((error) => {});
+        .catch((error) => {
+          console.log(error);
+        });
 
       window.location.reload();
     } else {
@@ -211,7 +213,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
           setDate(dateFirst + " " + dateLast);
 
           //ref 조건 별 위경도 계산
-          if (gpsLaRef == "N") {
+          if (gpsLaRef === "N") {
             a =
               parseInt(la[0]) +
               (60 * parseInt(la[1]) + parseFloat(la[2])) / 3600;
@@ -222,7 +224,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
           }
           setGPSLa(a);
 
-          if (gpsLongRef == "E") {
+          if (gpsLongRef === "E") {
             b =
               parseInt(long[0]) +
               (60 * parseInt(long[1]) + parseFloat(long[2])) / 3600;

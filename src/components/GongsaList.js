@@ -17,9 +17,9 @@ import Lottie from "react-lottie";
 import loadingAnimationData from "lotties/loading-construction.json";
 
 import axios from "axios";
-import { bindActionCreators } from "redux";
 
 const backUrl = "http://127.0.0.1:8080/gongsa";
+// CRUD API 주소
 
 Geocode.setApiKey("AIzaSyC4f6F3KSfqHFYjpS-8ZjkdFhImDtQ-FdI");
 Geocode.setLanguage("ko");
@@ -193,7 +193,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
           setDate(dateFirst + " " + dateLast);
 
           //ref 조건 별 위경도 계산
-          if (gpsLaRef == "N") {
+          if (gpsLaRef === "N") {
             a =
               parseInt(la[0]) +
               (60 * parseInt(la[1]) + parseFloat(la[2])) / 3600;
@@ -204,7 +204,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
           }
           setGPSLa(a);
 
-          if (gpsLongRef == "E") {
+          if (gpsLongRef === "E") {
             b =
               parseInt(long[0]) +
               (60 * parseInt(long[1]) + parseFloat(long[2])) / 3600;
@@ -254,7 +254,7 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
       });
       console.log(test);
 
-      if (test == undefined) {
+      if (test === undefined) {
         test = {
           code: "999",
           region: "기타",
