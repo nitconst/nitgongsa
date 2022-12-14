@@ -5,7 +5,7 @@ const connect = () => {
     mongoose.set("debug", true);
   }
   mongoose.connect(
-    "mongodb://jun9:qwer1234@127.0.0.1:27017/nitgongsa",
+    "mongodb://jun9:qwer1234@172.19.0.3:3003/nitgongsa",
     (error) => {
       if (error) {
         console.log("몽고디비 연결 에러", error);

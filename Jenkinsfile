@@ -13,15 +13,4 @@ node {
             sh "echo 'run docker-compose gogo'"
             sh "docker-compose up -d"
         }
-
-        // stage('Exchange') {
-        //     sh "echo 'Stop Previous Container'"
-        //     sh "docker stop nit-gongsa"
-        //     sh "docker rm nit-gongsa"
-        // }
-
-        // stage('Start') {
-        //     sh "echo '해치웠나?'"
-        //     sh "docker-compose up -d"
-        // }
     }
