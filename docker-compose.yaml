@@ -15,6 +15,10 @@ services:
       - 27018:27017
     volumes:
       - gongsa-mongo:/var/lib/mysql
+    networks:
+      - gongsa_network
+    expose:
+      - 3003
     environment: 
       - MONGO_INITDB_ROOT_USERNAME=jun9
       - MONGO_INITDB_ROOT_PASSWORD=qwer1234 
@@ -22,3 +26,7 @@ services:
 
 volumes:
   gongsa-mongo:
+
+networks:
+  gongsa_network:
+    driver: bridge
