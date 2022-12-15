@@ -83,7 +83,7 @@ const App = () => {
         setUserObj({
           displayName: user.phoneNumber, //로그인 시 폰 넘버
           uid: user.uid, //파이어베이스 제공 식별자
-          code : ajaxTransport.code
+          code: ajaxTransport.code,
         });
       } else {
         setIsLoggedIn(false);
@@ -101,7 +101,7 @@ const App = () => {
   };
 
   // RouteChangeTracker();
-
+  //
   return (
     <>
       {init ? (
