@@ -41,7 +41,8 @@
     "use-pagination-firestore": "^0.6.0",
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.4",
-    "webpack": "^4.44.0"
+    "webpack": "^4.44.0",
+    "firebase-tools": "11.18.0"
   },
   "scripts": {
     "start": "react-scripts start",
