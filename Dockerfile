@@ -12,4 +12,6 @@ ENV NODE_ENV development
 
 EXPOSE 3000
 
-CMD [ "npm", "start" ]
+EXPOSE 8080
+
+CMD [ "npm", "run", "dev" ]

@@ -75,7 +75,8 @@
     "@babel/preset-env": "^7.18.2",
     "babel-loader": "^8.2.5",
     "concurrently": "^7.5.0",
-    "redux-devtools-extension": "^2.13.9"
+    "redux-devtools-extension": "^2.13.9",
+    "nodemon": "^2.0.15"
   },
   "browser": {
     "fs": false,
