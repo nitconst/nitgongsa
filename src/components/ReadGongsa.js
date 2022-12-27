@@ -3,7 +3,9 @@ import GongsaList from "./GongsaList";
 import ExportExcel from "./ExportExcel";
 import axios from "axios";
 
-const backUrl = "http://127.0.0.1:8080/gongsa";
+require("dotenv").config();
+
+const backUrl = process.env.BACKEND_URL;
 // 백엔드 주소 + 요청할 디렉토리
 
 const ReadGongsa = ({ userObj, codeNum }) => {

@@ -18,10 +18,12 @@ import loadingAnimationData from "lotties/loading-construction.json";
 
 import axios from "axios";
 
-const backUrl = "http://127.0.0.1:8080/gongsa";
+require("dotenv").config();
+
+const backUrl = process.env.BACKEND_URL;
 // CRUD API 주소
 
-Geocode.setApiKey("AIzaSyC4f6F3KSfqHFYjpS-8ZjkdFhImDtQ-FdI");
+Geocode.setApiKey(process.env.GEO_APIKEY);
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
 Geocode.enableDebug();
