@@ -5,6 +5,8 @@ import Lottie from "react-lottie";
 import mainAnimationData from "lotties/auth-construction.json";
 import loadingAnimationData from "lotties/loading-construction.json";
 
+import kakaoLogin from "../statics/kakao.png";
+
 const Auth = () => {
   const [phoneNumber, setPhonenumber] = useState("");
   const [codeNumber, setCodeNumber] = useState("");
@@ -103,6 +105,8 @@ const Auth = () => {
         // ...
       });
   };
+
+  const submitKakao = () => {};
   return (
     <>
       <div className="auth-container">
@@ -114,7 +118,11 @@ const Auth = () => {
           <h1>여기 공사</h1>
         </div>
         <Lottie options={defaultOptions} height={200} width={200} />
-        <div className="field is-grouped">
+        <div style={{ height: "38px" }}></div>
+        <div
+          className="field is-grouped"
+          style={{ width: "183px", height: "45px" }}
+        >
           <p className="control is-expanded">
             <input
               className="input"
@@ -123,10 +131,20 @@ const Auth = () => {
               placeholder="'-'없이 전화번호 입력'"
               value={phoneNumber}
               onChange={onChanged}
+              style={{ width: "183px", height: "45px" }}
             />
           </p>
+        </div>
+        <div
+          className="field is-grouped"
+          style={{ width: "183px", height: "45px" }}
+        >
           <p className="control">
-            <a className="button is-link is-rounded" onClick={onSubmit}>
+            <a
+              className="button is-link"
+              style={{ width: "183px", height: "45px", fontSize: "15px" }}
+              onClick={onSubmit}
+            >
               로그인
             </a>
           </p>
@@ -162,6 +180,13 @@ const Auth = () => {
             </div>
           )}
         </>
+
+        <img
+          src={kakaoLogin}
+          onClick={submitKakao}
+          style={{ cursor: "pointer" }}
+        ></img>
+
         <div id="recaptcha-container"></div>
       </div>
     </>
