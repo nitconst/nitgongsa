@@ -20,14 +20,12 @@ import loadingAnimationData from "lotties/loading-construction.json";
 import { set } from "react-ga";
 import axios from "axios";
 
-require("dotenv").config();
-
-Geocode.setApiKey(process.env.GEO_APIKEY);
+Geocode.setApiKey(process.env.REACT_APP_GEO_APIKEY);
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
 Geocode.enableDebug();
 
-const backUrl = process.env.BACKEND_URL;
+const backUrl = process.env.REACT_APP_BACKEND_URL;
 
 //table 설계
 

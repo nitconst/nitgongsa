@@ -18,12 +18,10 @@ import loadingAnimationData from "lotties/loading-construction.json";
 
 import axios from "axios";
 
-require("dotenv").config();
-
-const backUrl = process.env.BACKEND_URL;
+const backUrl = process.env.REACT_APP_BACKEND_URL;
 // CRUD API 주소
 
-Geocode.setApiKey(process.env.GEO_APIKEY);
+Geocode.setApiKey(process.env.REACT_APP_GEO_APIKEY);
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
 Geocode.enableDebug();
