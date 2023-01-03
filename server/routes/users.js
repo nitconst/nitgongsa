@@ -22,13 +22,13 @@ router
   .post(async (req, res, next) => {
     try {
       // UserType 컬렉션에 document 생성 & 등록
-      const userType = await UserType.create({
-        phone: req.body.phone,
-        type: req.body.type,
-      });
-
-      console.log(userType);
-      res.status(201).json(userType);
+      // const userType = await UserType.create({
+      //   phone: req.body.phone,
+      //   type: req.body.type,
+      // });
+      console.log("ㅅㅂㅅㅂㅅㅂ");
+      console.log(req.body);
+      // res.status(201).json(userType);
     } catch (err) {
       console.error(err);
       next(err);
