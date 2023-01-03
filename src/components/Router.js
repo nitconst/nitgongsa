@@ -7,6 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import Auth from "routes/Auth";
+import KakaoRedirectHandler from "routes/KakaoRedirectHandler";
 import Home from "routes/Home";
 import Profile from "routes/Profile";
 import Navigation from "components/Navigation";
@@ -45,11 +46,13 @@ export default function AppRouter({
                 acts like a catch-all for URLs that we don't have explicit
                 routes for. */}
               </Route>
+              <Route path="/auth" element={<KakaoRedirectHandler />} />
               <Route path="*" element={<Navigate replace to="/" />} />
             </>
           ) : (
             <>
               <Route exact path="/" element={<Auth />} />
+              <Route path="/auth" element={<KakaoRedirectHandler />} />
               <Route path="*" element={<Navigate replace to="/" />} />
             </>
           )}

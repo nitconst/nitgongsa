@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 const userTypeSchema = new Schema({
-  phone: {
+  token: {
     type: String,
     unique: true,
     required: true,

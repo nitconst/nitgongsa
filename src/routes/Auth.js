@@ -5,6 +5,9 @@ import Lottie from "react-lottie";
 import mainAnimationData from "lotties/auth-construction.json";
 import loadingAnimationData from "lotties/loading-construction.json";
 
+import kakaoLogin from "../statics/kakaolarge.png";
+import axios from "axios";
+
 const Auth = () => {
   const [phoneNumber, setPhonenumber] = useState("");
   const [codeNumber, setCodeNumber] = useState("");
@@ -13,6 +16,9 @@ const Auth = () => {
   const appVerifier = window.recaptchaVerifier;
   const phoneNumberTest = "+16505551234";
   const testVerificationCode = "123456";
+
+  const REDIRECT_URI = "http://127.0.0.1:3000/auth"; // 인증코드 발급 부분으로 redirecting 하면될듯
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_API}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
   const defaultOptions = {
     loop: true,
@@ -103,6 +109,7 @@ const Auth = () => {
         // ...
       });
   };
+
   return (
     <>
       <div className="auth-container">
@@ -114,7 +121,11 @@ const Auth = () => {
           <h1>여기 공사</h1>
         </div>
         <Lottie options={defaultOptions} height={200} width={200} />
-        <div className="field is-grouped">
+        <div style={{ height: "38px" }}></div>
+        <div
+          className="field is-grouped"
+          style={{ width: "183px", height: "45px" }}
+        >
           <p className="control is-expanded">
             <input
               className="input"
@@ -123,10 +134,20 @@ const Auth = () => {
               placeholder="'-'없이 전화번호 입력'"
               value={phoneNumber}
               onChange={onChanged}
+              style={{ width: "183px", height: "45px" }}
             />
           </p>
+        </div>
+        <div
+          className="field is-grouped"
+          style={{ width: "183px", height: "45px" }}
+        >
           <p className="control">
-            <a className="button is-link is-rounded" onClick={onSubmit}>
+            <a
+              className="button is-link"
+              style={{ width: "183px", height: "45px", fontSize: "15px" }}
+              onClick={onSubmit}
+            >
               로그인
             </a>
           </p>
@@ -162,6 +183,14 @@ const Auth = () => {
             </div>
           )}
         </>
+
+        <a href={KAKAO_AUTH_URL}>
+          <img
+            src={kakaoLogin}
+            style={{ width: "183px", height: "45px" }}
+          ></img>
+        </a>
+
         <div id="recaptcha-container"></div>
       </div>
     </>

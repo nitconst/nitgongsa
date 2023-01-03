@@ -5,20 +5,31 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - gongsa-app:/usr/src/app
+    networks:
+      gongsa_network:
+        ipv4_address: "192.168.0.2"
     ports:
       - 3002:3000
+      - 8081:8080
+    depends_on:
+      - mongoDB
 
   mongoDB:
     image: mongo
     container_name: gongsadb
+    restart: always
     ports:
       - 27018:27017
     volumes:
       - gongsa-mongo:/var/lib/mysql
     networks:
-      - gongsa_network
+      gongsa_network:
+        ipv4_address: "192.168.0.5"
     expose:
-      - 3003
+      - 27017
     environment: 
       - MONGO_INITDB_ROOT_USERNAME=jun9
       - MONGO_INITDB_ROOT_PASSWORD=qwer1234 
@@ -26,7 +37,13 @@ services:
 
 volumes:
   gongsa-mongo:
+  gongsa-app:
 
 networks:
   gongsa_network:
     driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.0.0/24"
+          gateway: "192.168.0.1"
