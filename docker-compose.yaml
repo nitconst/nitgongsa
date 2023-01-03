@@ -39,11 +39,12 @@ volumes:
   gongsa-mongo:
   gongsa-app:
 
-# networks:
-#   gongsa_network:
-#     driver: bridge
-#     ipam:
-#       driver: default
-#       config:
-#         - subnet: "192.168.0.0/24"
-#           gateway: "192.168.0.1"
+networks:
+  gongsa_network:
+    external: true
+    # driver: bridge
+    # ipam:
+    #   driver: default
+    #   config:
+    #     - subnet: "192.168.0.0/24"
+    #       gateway: "192.168.0.1"
