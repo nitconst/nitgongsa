@@ -41,7 +41,6 @@ volumes:
 
 networks:
   gongsa_network:
-    external: true
     driver: bridge
     ipam:
       driver: default
