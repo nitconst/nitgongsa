@@ -422,7 +422,13 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
                       </span>
                     </div>
                     <h4>공사사진</h4>
-                    <img src={gongsaObj.attachmentUrl} alt="" />
+                    <div className="img-container">
+                      <img
+                        className="gongsa-img"
+                        src={gongsaObj.attachmentUrl}
+                        alt=""
+                      />
+                    </div>
                     <h4>주소</h4>
                     <p>{gongsaObj.addr}</p>
                     <h4>처리상태</h4>
