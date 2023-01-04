@@ -8,6 +8,7 @@ import {
   where,
   onSnapshot,
   orderBy,
+  getCountFromServer,
 } from "firebase/firestore";
 import Register from "components/Register";
 import ReadGongsa from "components/ReadGongsa";
@@ -19,6 +20,7 @@ import { CONTACT_DATA } from "lib/contact";
 const Home = ({ userObj, codeNum }) => {
   const [gongsa, setGongsa] = useState([]);
   const [isUser, setIsUser] = useState(true);
+  const [gongsaCount, setGongsaCount] = useState("");
 
   useEffect(() => {
     //user 소속별 type 설정
@@ -26,6 +28,8 @@ const Home = ({ userObj, codeNum }) => {
       collection(dbService, "usertype"),
       where("phone", "==", userObj.displayName)
     );
+    //getGongsaCount();
+
     onSnapshot(type, (snapshot) => {
       const typearr = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -38,6 +42,12 @@ const Home = ({ userObj, codeNum }) => {
     });
   }, []);
 
+  const getGongsaCount = async () => {
+    // const coll = collection(dbService, "gongsa");
+    // const snapshot = await getCountFromServer(coll);
+    // //console.log("count: ", snapshot.data().count);
+    // setGongsaCount(snapshot.data().count);
+  };
   return (
     <>
       {isUser ? (
@@ -67,6 +77,12 @@ const Home = ({ userObj, codeNum }) => {
                 </span>
               </button>
             </div>
+            <article class="message is-small is-link">
+              <div class="message-body">
+                사외공사 누적 신고 건 수 : {gongsaCount}건
+                <br /> "우리의 관심이 안전한 공사를 만듭니다"
+              </div>
+            </article>
             <Register userObj={userObj} codeNum={codeNum} />
             <ReadGongsa userObj={userObj} codeNum={codeNum} />
             <Footer />
