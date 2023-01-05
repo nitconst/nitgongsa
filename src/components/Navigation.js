@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, Link } from "react-router-dom";
-import UserType from "./UserType";
-import {
-  collection,
-  addDoc,
-  query,
-  where,
-  onSnapshot,
-  orderBy,
-} from "firebase/firestore";
-import { dbService } from "fbase";
+
+import axios from "axios";
+
+const backUrl = process.env.REACT_APP_BACKEND_URL_USER;
 
 //isuser 삼항연산자
 
@@ -17,20 +11,37 @@ const Navigation = ({ userObj }) => {
   const [isType, setIsType] = useState(true);
 
   useEffect(() => {
-    const type = query(
-      collection(dbService, "usertype"),
-      where("phone", "==", userObj.displayName)
-    );
-    onSnapshot(type, (snapshot) => {
-      const typearr = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    const fetchData = async () => {
+      const q = {
+        phone: userObj.displayName,
+      };
+      await axios
+        .get(backUrl, { params: q })
+        .then((res) => {
+          if (res.data === "") {
+            setIsType(false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    fetchData();
 
-      if (typearr == "") {
-        setIsType(false);
-      }
-    });
+    // const type = query(
+    //   collection(dbService, "usertype"),
+    //   where("phone", "==", userObj.displayName)
+    // );
+    // onSnapshot(type, (snapshot) => {
+    //   const typearr = snapshot.docs.map((doc) => ({
+    //     id: doc.id,
+    //     ...doc.data(),
+    //   }));
+
+    //   if (typearr == "") {
+    //     setIsType(false);
+    //   }
+    // });
   }, []);
 
   return (
