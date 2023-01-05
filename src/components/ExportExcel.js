@@ -10,6 +10,9 @@ import {
 import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import ReactExport from "react-export-excel";
+import axios from "axios";
+
+const backUrl = process.env.REACT_APP_BACKEND_URL_EXCEL;
 
 const ExportExcel = ({ selectedItem }) => {
   const [gongsaList, setGongsaList] = useState([]);
@@ -28,42 +31,80 @@ const ExportExcel = ({ selectedItem }) => {
       selectedItem === "300" ||
       selectedItem === "400"
     ) {
-      const str = selectedItem.charAt(0);
-      const q = query(
-        collection(dbService, "gongsa"),
-        orderBy("regioncode"),
-        orderBy("createdAt", "desc"),
-        startAt(str),
-        endAt(str + "\uf8ff")
-      );
+      // const str = selectedItem.charAt(0);
+      // const q = query(
+      //   collection(dbService, "gongsa"),
+      //   orderBy("regioncode"),
+      //   orderBy("createdAt", "desc"),
+      //   startAt(str),
+      //   endAt(str + "\uf8ff")
+      // );
 
-      const querySnapshot = await getDocs(q);
+      // const querySnapshot = await getDocs(q);
+      // const querySnapshotArray = [];
+      // querySnapshot.forEach((doc) => {
+      //   querySnapshotArray.push(doc.data());
+      // });
+      // setGongsaList(querySnapshotArray);
+
+      const q = { queryType: "1", regioncode2: selectedItem };
       const querySnapshotArray = [];
-      querySnapshot.forEach((doc) => {
-        querySnapshotArray.push(doc.data());
+
+      await axios.get(backUrl, { params: q }).then((res) => {
+        const querySnapshot = res.data;
+
+        querySnapshot.forEach((doc) => {
+          querySnapshotArray.push(doc);
+        });
+        setGongsaList(querySnapshotArray);
       });
-      setGongsaList(querySnapshotArray);
     } else if (selectedItem === "000") {
-      const q = query(collection(dbService, "gongsa"));
+      // const q = query(collection(dbService, "gongsa"));
 
-      const querySnapshot = await getDocs(q);
+      // const querySnapshot = await getDocs(q);
+
+      // const querySnapshotArray = [];
+      // querySnapshot.forEach((doc) => {
+      //   console.log(doc.data());
+      //   querySnapshotArray.push(doc.data());
+      // });
+      // setGongsaList(querySnapshotArray);
+
+      const q = { queryType: "0" };
       const querySnapshotArray = [];
-      querySnapshot.forEach((doc) => {
-        querySnapshotArray.push(doc.data());
+
+      await axios.get(backUrl, { params: q }).then((res) => {
+        const querySnapshot = res.data;
+
+        querySnapshot.forEach((doc) => {
+          querySnapshotArray.push(doc);
+        });
+        setGongsaList(querySnapshotArray);
       });
-      setGongsaList(querySnapshotArray);
     } else {
-      const q = query(
-        collection(dbService, "gongsa"),
-        where("regioncode", "==", selectedItem)
-      );
+      //   const q = query(
+      //     collection(dbService, "gongsa"),
+      //     where("regioncode", "==", selectedItem)
+      //   );
 
-      const querySnapshot = await getDocs(q);
+      //   const querySnapshot = await getDocs(q);
+      //   const querySnapshotArray = [];
+      //   querySnapshot.forEach((doc) => {
+      //     querySnapshotArray.push(doc.data());
+      //   });
+      //   setGongsaList(querySnapshotArray);
+
+      const q = { queryType: "2", regioncode: selectedItem };
       const querySnapshotArray = [];
-      querySnapshot.forEach((doc) => {
-        querySnapshotArray.push(doc.data());
+
+      await axios.get(backUrl, { params: q }).then((res) => {
+        const querySnapshot = res.data;
+
+        querySnapshot.forEach((doc) => {
+          querySnapshotArray.push(doc);
+        });
+        setGongsaList(querySnapshotArray);
       });
-      setGongsaList(querySnapshotArray);
     }
   };
   return (
