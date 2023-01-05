@@ -1,13 +1,11 @@
 const mongoose = require("mongoose");
 
-require("dotenv").config();
-
 const connect = () => {
   if (process.env.NODE_ENV !== "production") {
     mongoose.set("debug", true);
   }
   mongoose.connect(
-    `mongodb://${process.env.DB_ID}:${process.env.DB_PW}@${process.env.DB_ADDRESS}`,
+    `mongodb://jun9:qwer1234@127.0.0.1:27017`,
     {
       dbName: "nitgongsa",
       useNewUrlParser: true,
