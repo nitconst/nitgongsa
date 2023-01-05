@@ -5,7 +5,7 @@ const connect = () => {
     mongoose.set("debug", true);
   }
   mongoose.connect(
-    `mongodb://jun9:qwer1234@127.0.0.1:27017`,
+    `mongodb://jun9:qwer1234@192.168.0.5:27017`,
     {
       dbName: "nitgongsa",
       useNewUrlParser: true,
