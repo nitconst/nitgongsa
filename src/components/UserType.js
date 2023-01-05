@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { dbService, storageService } from "../fbase";
-import { setDoc, doc } from "firebase/firestore";
 import Lottie from "react-lottie";
 import mainAnimationData from "lotties/auth-construction.json";
 import Employee from "lotties/69047-vacation.json";
 import Partner from "lotties/95720-business-partners.json";
+
+import axios from "axios";
+
+const backUrl = process.env.REACT_APP_BACKEND_URL_USER;
 
 const UserType = ({ userObj }) => {
   const [selectedItem, setSelectedItem] = useState("");
@@ -61,7 +63,17 @@ const UserType = ({ userObj }) => {
     };
 
     //key값 부여를 위한 addDoc에서 setDoc으로 함수 변경
-    await setDoc(doc(dbService, "usertype", key), Codeobj);
+    //await setDoc(doc(dbService, "usertype", key), Codeobj);
+
+    await axios
+      .put(backUrl, { key: key, phone: Codeobj.phone, type: Codeobj.type })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
     window.location.reload();
   };
 

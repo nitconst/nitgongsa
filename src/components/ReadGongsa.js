@@ -8,7 +8,7 @@ const backUrl = process.env.REACT_APP_BACKEND_URL;
 
 const ReadGongsa = ({ userObj, codeNum }) => {
   const [selectedItem, setSelectedItem] = useState("000");
-  // regioncode2 : 정렬을 위한 state, 000은 전체, 001,002,003,004는 지역별
+  // regioncode2 : 정렬을 위한 state, 000은 전체, 100,200,300,400는 지역별
   const [isPc, setIsPC] = useState(false);
   const [queryObject, setQueryObject] = useState({ id: "0" });
   // 쿼리할 내용에 따라 요청을 구분하기 위한 쿼리오브젝트

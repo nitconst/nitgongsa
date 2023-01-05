@@ -4,26 +4,50 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { onLog } from "@firebase/app";
 import GongsaList from "components/GongsaList";
 
+import axios from "axios";
+
+const backUrl = process.env.REACT_APP_BACKEND_URL;
+
 const Profile = ({ userObj, codeNum }) => {
   console.log(userObj);
   const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
   const [myGongsa, setMyGongsa] = useState([]);
 
   useEffect(() => {
-    async function querySnapShot() {
-      const q = query(
-        collection(dbService, "gongsa"),
-        where("createdId", "==", userObj.uid)
-      );
+    const fetchData = async () => {
+      const q = {
+        phone: userObj.displayName,
+        search: "my",
+      };
+      await axios
+        .get(backUrl, { params: q })
+        .then((res) => {
+          const gongsaArr = res.data.map((doc) => ({
+            id: doc.id,
+            ...doc.data(), //합쳐서 보여줌
+          }));
+          setMyGongsa(gongsaArr);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    fetchData();
 
-      const querySnapshot = await getDocs(q);
-      const gongsaArr = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(), //합쳐서 보여줌
-      }));
-      setMyGongsa(gongsaArr);
-    }
-    querySnapShot();
+    // async function querySnapShot() {
+    //   const q = query(
+    //     collection(dbService, "gongsa"),
+    //     where("createdId", "==", userObj.uid)
+    //   );
+
+    //   const querySnapshot = await getDocs(q);
+    //   const gongsaArr = querySnapshot.docs.map((doc) => ({
+    //     id: doc.id,
+    //     ...doc.data(), //합쳐서 보여줌
+    //   }));
+    //   setMyGongsa(gongsaArr);
+    // }
+    // querySnapShot();
     setNewDisplayName(userObj.displayName.replace("+82", "0"));
   }, []);
   const onLogOutClick = async () => await authService.signOut();

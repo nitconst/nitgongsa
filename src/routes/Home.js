@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Lottie from "react-lottie";
-import { dbService } from "fbase";
-import {
-  collection,
-  addDoc,
-  query,
-  where,
-  onSnapshot,
-  orderBy,
-} from "firebase/firestore";
+
 import Register from "components/Register";
 import ReadGongsa from "components/ReadGongsa";
 import UserType from "components/UserType";
 import Footer from "components/Footer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import axios from "axios";
+
+const backUrl = process.env.REACT_APP_BACKEND_URL_USER;
 
 const Home = ({ userObj, codeNum }) => {
   const [gongsa, setGongsa] = useState([]);
@@ -21,20 +15,37 @@ const Home = ({ userObj, codeNum }) => {
 
   useEffect(() => {
     //user 소속별 type 설정
-    const type = query(
-      collection(dbService, "usertype"),
-      where("phone", "==", userObj.displayName)
-    );
-    onSnapshot(type, (snapshot) => {
-      const typearr = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    const fetchData = async () => {
+      const q = {
+        phone: userObj.displayName,
+      };
+      await axios
+        .get(backUrl, { params: q })
+        .then((res) => {
+          if (res.data === undefined) {
+            setIsUser(false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    fetchData();
 
-      if (typearr == "") {
-        setIsUser(false);
-      }
-    });
+    // const type = query(
+    //   collection(dbService, "usertype"),
+    //   where("phone", "==", userObj.displayName)
+    // );
+    // onSnapshot(type, (snapshot) => {
+    //   const typearr = snapshot.docs.map((doc) => ({
+    //     id: doc.id,
+    //     ...doc.data(),
+    //   }));
+
+    //   if (typearr === "") {
+    //     setIsUser(false);
+    //   }
+    // });
   }, []);
 
   return (

@@ -5,9 +5,6 @@ import Lottie from "react-lottie";
 import mainAnimationData from "lotties/auth-construction.json";
 import loadingAnimationData from "lotties/loading-construction.json";
 
-import kakaoLogin from "../statics/kakaolarge.png";
-import axios from "axios";
-
 const Auth = () => {
   const [phoneNumber, setPhonenumber] = useState("");
   const [codeNumber, setCodeNumber] = useState("");
@@ -17,8 +14,9 @@ const Auth = () => {
   const phoneNumberTest = "+16505551234";
   const testVerificationCode = "123456";
 
-  const REDIRECT_URI = "http://127.0.0.1:3000/auth"; // 인증코드 발급 부분으로 redirecting 하면될듯
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_API}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  // const REDIRECT_URI = "http://127.0.0.1:3000/auth";
+  // 인증코드 발급 부분으로 redirecting 하면될듯
+  // const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_API}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
   const defaultOptions = {
     loop: true,
@@ -184,12 +182,12 @@ const Auth = () => {
           )}
         </>
 
-        <a href={KAKAO_AUTH_URL}>
+        {/* <a href={KAKAO_AUTH_URL}>
           <img
             src={kakaoLogin}
             style={{ width: "183px", height: "45px" }}
           ></img>
-        </a>
+        </a> */}
 
         <div id="recaptcha-container"></div>
       </div>

@@ -26,6 +26,7 @@ Geocode.setRegion("kr");
 Geocode.enableDebug();
 
 const backUrl = process.env.REACT_APP_BACKEND_URL;
+const backUrl_user = process.env.REACT_APP_BACKEND_URL_USER;
 
 //table 설계
 
@@ -159,17 +160,30 @@ const RegisterFactory = ({ userObj, codeNum }) => {
     }
 
     //usercode 가져오기
-    const type = query(
-      collection(dbService, "usertype"),
-      where("phone", "==", userObj.displayName)
-    );
-    onSnapshot(type, (snapshot) => {
-      const typearr = snapshot.docs.map((doc) => ({
-        ...doc.data(),
-      }));
-      console.log(typearr[0].type);
-      setUsertype(typearr[0].type);
-    });
+
+    // const type = query(
+    //   collection(dbService, "usertype"),
+    //   where("phone", "==", userObj.displayName)
+    // );
+    // onSnapshot(type, (snapshot) => {
+    //   const typearr = snapshot.docs.map((doc) => ({
+    //     ...doc.data(),
+    //   }));
+    //   console.log(typearr[0].type);
+    //   setUsertype(typearr[0].type);
+    // });
+
+    const q = {
+      phone: userObj.displayName,
+    };
+    axios
+      .get(backUrl_user, { params: q })
+      .then((res) => {
+        setUsertype(res.data.type);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     //메타데이터 추출
     if (theFile && theFile.name) {

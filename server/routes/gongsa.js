@@ -66,6 +66,10 @@ router
           .skip((Number(q.page) - 2) * 5);
         // 날짜 순 정렬 및 5개 제한하는 쿼리, regioncode에 따른 지역별 정렬 pagenation
         res.send(gongsa);
+      } else if (q.search === "my") {
+        const gongsa = await Gongsa.find({ phone: q.phone });
+        res.send(gongsa);
+        // 현재 사용자 포스팅만 정렬
       } else {
         res.send("Wrong Request, No data.");
       }
@@ -93,5 +97,30 @@ router
       .then(() => res.sendStatus(200))
       .catch((err) => res.status(500).send(err));
   });
+
+router.route("/excel").get(async (req, res, next) => {
+  let q = req.query;
+  try {
+    if (q.queryType === "0") {
+      const gongsa = await Gongsa.find().sort({ createdAt: -1 });
+      res.send(gongsa);
+    } else if (q.queryType === "1") {
+      const gongsa = await Gongsa.find({ regioncode2: q.regioncode2 }).sort({
+        createdAt: -1,
+      });
+      res.send(gongsa);
+    } else if (q.queryType === "2") {
+      const gongsa = await Gongsa.find({ regioncode: q.regioncode }).sort({
+        createdAt: -1,
+      });
+      res.send(gongsa);
+    } else {
+      res.send("Wrong Request, No data.");
+    }
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
 
 module.exports = router;
