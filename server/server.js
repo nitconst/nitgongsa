@@ -4,6 +4,7 @@ const path = require("path");
 const connect = require("./schemas");
 const usersRouter = require("./routes/users");
 const gongsaRouter = require("./routes/gongsa");
+// const tokenRouter = require("./routes/token");
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/users", usersRouter);
 app.use("/gongsa", gongsaRouter);
+// app.use("/token", tokenRouter);
 
 app.get("/", (req, res, next) => {
   res.json({ man: "scraa" });

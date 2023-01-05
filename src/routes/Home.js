@@ -22,7 +22,6 @@ const Home = ({ userObj, codeNum }) => {
       await axios
         .get(backUrl, { params: q })
         .then((res) => {
-          console.log(res.data);
           if (res.data === undefined) {
             setIsUser(false);
           }
