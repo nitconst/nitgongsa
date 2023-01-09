@@ -6,7 +6,7 @@ node {
 
         stage('Tests') {
             sh "echo 'test'"
-            sh "ls"
+            sh "docker-compose down --remove-orphans"
         }
 
         stage('Build') {
