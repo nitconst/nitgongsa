@@ -12,7 +12,7 @@ import loadingAnimationData from "lotties/loading-construction.json";
 import { set } from "react-ga";
 import axios from "axios";
 
-Geocode.setApiKey(process.env.REACT_APP_GEO_APIKEY);
+Geocode.setApiKey(`${process.env.REACT_APP_GEO_APIKEY}`);
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
 Geocode.enableDebug();
