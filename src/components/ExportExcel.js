@@ -1,13 +1,3 @@
-import {
-  collection,
-  endAt,
-  getDocs,
-  orderBy,
-  query,
-  startAt,
-  where,
-} from "@firebase/firestore";
-import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import ReactExport from "react-export-excel";
 import axios from "axios";
@@ -25,6 +15,9 @@ const ExportExcel = ({ selectedItem }) => {
   }, [selectedItem]);
 
   const getGongsaList = async () => {
+    let q = {};
+    const querySnapshotArray = [];
+
     if (
       selectedItem === "100" ||
       selectedItem === "200" ||
@@ -47,17 +40,7 @@ const ExportExcel = ({ selectedItem }) => {
       // });
       // setGongsaList(querySnapshotArray);
 
-      const q = { queryType: "1", regioncode2: selectedItem };
-      const querySnapshotArray = [];
-
-      await axios.get(backUrl, { params: q }).then((res) => {
-        const querySnapshot = res.data;
-
-        querySnapshot.forEach((doc) => {
-          querySnapshotArray.push(doc);
-        });
-        setGongsaList(querySnapshotArray);
-      });
+      q = { queryType: "1", regioncode2: selectedItem };
     } else if (selectedItem === "000") {
       // const q = query(collection(dbService, "gongsa"));
 
@@ -70,17 +53,7 @@ const ExportExcel = ({ selectedItem }) => {
       // });
       // setGongsaList(querySnapshotArray);
 
-      const q = { queryType: "0" };
-      const querySnapshotArray = [];
-
-      await axios.get(backUrl, { params: q }).then((res) => {
-        const querySnapshot = res.data;
-
-        querySnapshot.forEach((doc) => {
-          querySnapshotArray.push(doc);
-        });
-        setGongsaList(querySnapshotArray);
-      });
+      q = { queryType: "0" };
     } else {
       //   const q = query(
       //     collection(dbService, "gongsa"),
@@ -94,18 +67,16 @@ const ExportExcel = ({ selectedItem }) => {
       //   });
       //   setGongsaList(querySnapshotArray);
 
-      const q = { queryType: "2", regioncode: selectedItem };
-      const querySnapshotArray = [];
-
-      await axios.get(backUrl, { params: q }).then((res) => {
-        const querySnapshot = res.data;
-
-        querySnapshot.forEach((doc) => {
-          querySnapshotArray.push(doc);
-        });
-        setGongsaList(querySnapshotArray);
-      });
+      q = { queryType: "2", regioncode: selectedItem };
     }
+    await axios.get(backUrl, { params: q }).then((res) => {
+      const querySnapshot = res.data;
+
+      querySnapshot.forEach((doc) => {
+        querySnapshotArray.push(doc);
+      });
+      setGongsaList(querySnapshotArray);
+    });
   };
   return (
     <ExcelFile
