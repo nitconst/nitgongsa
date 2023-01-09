@@ -1,15 +1,7 @@
 // Register 폼 Component
 import React, { useRef, useState } from "react";
-import { dbService, storageService } from "../fbase";
-import {
-  setDoc,
-  doc,
-  collection,
-  query,
-  where,
-  getDocs,
-  onSnapshot,
-} from "firebase/firestore";
+import { storageService } from "../fbase";
+
 import { v4 as uuidv4 } from "uuid";
 import EXIF from "exif-js";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
@@ -20,7 +12,7 @@ import loadingAnimationData from "lotties/loading-construction.json";
 import { set } from "react-ga";
 import axios from "axios";
 
-Geocode.setApiKey(process.env.REACT_APP_GEO_APIKEY);
+Geocode.setApiKey(`${process.env.REACT_APP_GEO_APIKEY}`);
 Geocode.setLanguage("ko");
 Geocode.setRegion("kr");
 Geocode.enableDebug();

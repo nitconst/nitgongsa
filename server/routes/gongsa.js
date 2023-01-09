@@ -83,7 +83,6 @@ router
       .then(() => res.send("OK"))
       .catch((err) => res.status(500).send(err));
     console.log(result);
-    res.status(201).json(result);
   })
   .put(async (req, res, next) => {
     console.log(req.body);

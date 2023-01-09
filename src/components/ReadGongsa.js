@@ -62,6 +62,7 @@ const ReadGongsa = ({ userObj, codeNum }) => {
       });
     };
     fetchData();
+    console.log(page);
   };
 
   const getGongsaDataByRegion = () => {
@@ -123,28 +124,21 @@ const ReadGongsa = ({ userObj, codeNum }) => {
     if (list.length === 0) {
       alert("Thats all we have for now !");
     } else {
-      const fetchNextData = () => {
-        const q = queryObject;
-        axios.get(backUrl, { params: q }).then((res) => {
-          // console.log(res.data);
-          let items = [];
-          res.data.forEach((doc) => {
-            items.push({ key: doc._id, ...doc });
-          });
-          setList(items);
-          setPage(page + 1);
-          // console.log(items);
-        });
-        // const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        //   const items = [];
-        //   querySnapshot.forEach((doc) => {
-        //     items.push({ key: doc.id, ...doc.data() });
-        //   });
-        //   setList(items);
-        //   setPage(page + 1);
-        // });
-      };
-      fetchNextData();
+      setPage(page + 1);
+
+      //     setList(items);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+      // const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      //   const items = [];
+      //   querySnapshot.forEach((doc) => {
+      //     items.push({ key: doc.id, ...doc.data() });
+      //   });
+      //   setList(items);
+      //   setPage(page + 1);
+      // });
     }
   };
 
@@ -190,20 +184,7 @@ const ReadGongsa = ({ userObj, codeNum }) => {
         // )
       );
     }
-    const fetchPreviousData = () => {
-      const q = queryObject;
-      axios.get(backUrl, { params: q }).then((res) => {
-        // console.log(res.data);
-        let items = [];
-        res.data.forEach((doc) => {
-          items.push({ key: doc._id, ...doc });
-        });
-        setList(items);
-        setPage(page - 1);
-        // console.log(items);
-      });
-    };
-    fetchPreviousData();
+    setPage(page - 1);
   };
 
   const onChangeHandler = (e) => {
