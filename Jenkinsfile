@@ -5,7 +5,7 @@ node {
         }
 
         stage('Clear') {
-            sh "echo 'Clearing previous files'"
+            sh "echo 'Clearing previous files wa'"
             sh "docker-compose down --remove-orphans"
         }
 
