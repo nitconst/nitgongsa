@@ -24,7 +24,7 @@ services:
     ports:
       - 27018:27017
     volumes:
-      - ./data:/var/lib/mysql
+      - gongsa-db:/var/lib/mysql
     networks:
       gongsa_network:
         ipv4_address: "192.168.0.5"
@@ -37,6 +37,7 @@ services:
 
 volumes:
   gongsa-app:
+  gongsa-db:
 
 networks:
   gongsa_network:
