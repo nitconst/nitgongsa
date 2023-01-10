@@ -8,6 +8,8 @@ COPY ./ /usr/src/app
 
 RUN npm install
 
+RUN npm install -g nodemon
+
 ENV NODE_ENV development
 
 EXPOSE 3000
