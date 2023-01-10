@@ -4,8 +4,8 @@ node {
             checkout scm
         }
 
-        stage('Tests') {
-            sh "echo 'test'"
+        stage('Clear') {
+            sh "echo 'Clearing previous files'"
             sh "docker-compose down --remove-orphans"
         }
 
