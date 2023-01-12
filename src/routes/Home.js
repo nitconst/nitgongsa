@@ -9,7 +9,7 @@ import axios from "axios";
 
 const backUrl = process.env.REACT_APP_BACKEND_URL_USER;
 
-const Home = ({ userObj, codeNum }) => {
+const Home = ({ userObj }) => {
   const [gongsa, setGongsa] = useState([]);
   const [isUser, setIsUser] = useState(true);
 
@@ -77,8 +77,8 @@ const Home = ({ userObj, codeNum }) => {
                 </span>
               </button>
             </div>
-            <Register userObj={userObj} codeNum={codeNum} />
-            <ReadGongsa userObj={userObj} codeNum={codeNum} />
+            <Register userObj={userObj} />
+            <ReadGongsa userObj={userObj} />
             <Footer />
           </div>
         </div>
@@ -94,7 +94,7 @@ const Home = ({ userObj, codeNum }) => {
                 필요합니다.
               </h3>
             </div>
-            <UserType userObj={userObj} codeNum={codeNum} />
+            <UserType userObj={userObj} />
           </div>
         </div>
       )}

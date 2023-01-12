@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import GongsaList from "./GongsaList";
 import ExportExcel from "./ExportExcel";
 import axios from "axios";
+import CODE_NUM from "constants/codenum";
 
 const backUrl = process.env.REACT_APP_BACKEND_URL;
 // 백엔드 주소 + 요청할 디렉토리
 
-const ReadGongsa = ({ userObj, codeNum }) => {
+const ReadGongsa = ({ userObj }) => {
   const [selectedItem, setSelectedItem] = useState("000");
   // regioncode2 : 정렬을 위한 state, 000은 전체, 100,200,300,400는 지역별
   const [isPc, setIsPC] = useState(false);
@@ -204,7 +205,7 @@ const ReadGongsa = ({ userObj, codeNum }) => {
         <div className="select select-region">
           <>{isPc && <ExportExcel selectedItem={selectedItem} />}</>
           <select value={selectedItem} onChange={(e) => onChangeHandler(e)}>
-            {codeNum.map((item, index) => (
+            {CODE_NUM.map((item, index) => (
               <option key={item.code} value={item.code}>
                 {item.region}
               </option>
@@ -217,7 +218,6 @@ const ReadGongsa = ({ userObj, codeNum }) => {
             gongsaObj={gongsa}
             key={gongsa.docKey}
             userObj={userObj}
-            codeNum={codeNum}
             isOwner={gongsa.createdId === userObj.uid}
           />
         ))}

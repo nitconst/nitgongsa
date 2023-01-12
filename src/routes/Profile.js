@@ -8,7 +8,7 @@ import axios from "axios";
 
 const backUrl = process.env.REACT_APP_BACKEND_URL;
 
-const Profile = ({ userObj, codeNum }) => {
+const Profile = ({ userObj }) => {
   console.log(userObj);
   const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
   const [myGongsa, setMyGongsa] = useState([]);
@@ -71,7 +71,6 @@ const Profile = ({ userObj, codeNum }) => {
               gongsaObj={gongsa}
               key={gongsa.docKey}
               userObj={userObj}
-              codeNum={codeNum}
               isOwner={gongsa.createdId === userObj.uid}
             />
           ))}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import RegisterFactory from "./RegisterFactory";
 
-const Register = ({ userObj, codeNum }) => {
+const Register = ({ userObj }) => {
   const [isHiding, setIsHiding] = useState(false);
   // box 숨기기 toggle
   const toggleHide = () => {
@@ -30,7 +30,7 @@ const Register = ({ userObj, codeNum }) => {
             </span>
           </div>
         </div>
-        {isHiding && <RegisterFactory userObj={userObj} codeNum={codeNum} />}
+        {isHiding && <RegisterFactory userObj={userObj} />}
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import Lottie from "react-lottie";
 import loadingAnimationData from "lotties/loading-construction.json";
 import { set } from "react-ga";
 import axios from "axios";
+import CODE_NUM from "constants/codenum";
 
 Geocode.setApiKey(`${process.env.REACT_APP_GEO_APIKEY}`);
 Geocode.setLanguage("ko");
@@ -22,7 +23,7 @@ const backUrl_user = process.env.REACT_APP_BACKEND_URL_USER;
 
 //table 설계
 
-const RegisterFactory = ({ userObj, codeNum }) => {
+const RegisterFactory = ({ userObj }) => {
   const [gongsa, setGongsa] = useState("");
   const [attachment, setAttachment] = useState("");
   const [date, setDate] = useState(""); //시각
@@ -312,7 +313,7 @@ const RegisterFactory = ({ userObj, codeNum }) => {
   const fileInput = useRef();
 
   //code 찾기
-  let test = codeNum.find((codeNum) => {
+  let test = CODE_NUM.find((codeNum) => {
     return codeNum.region === arr[2];
   });
 

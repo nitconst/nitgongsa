@@ -15,7 +15,7 @@ import EXIF from "exif-js";
 import imageCompression from "browser-image-compression";
 import Lottie from "react-lottie";
 import loadingAnimationData from "lotties/loading-construction.json";
-
+import CODE_NUM from "constants/codenum";
 import axios from "axios";
 
 const backUrl = process.env.REACT_APP_BACKEND_URL;
@@ -32,7 +32,7 @@ const Img = styled.img`
   border: none;
 `;
 
-const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
+const GongsaList = ({ gongsaObj, isOwner, userObj }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [textEdit, setTextEdit] = useState(gongsaObj.text);
   const [attachment, setAttachment] = useState("");
@@ -248,8 +248,8 @@ const GongsaList = ({ gongsaObj, isOwner, userObj, codeNum }) => {
         "data_url"
       );
       attachmentUrl = await getDownloadURL(response.ref);
-      console.log(codeNum);
-      let test = codeNum.find((codeNum) => {
+      console.log(CODE_NUM);
+      let test = CODE_NUM.find((codeNum) => {
         return codeNum.region === arr[2];
       });
       console.log(test);

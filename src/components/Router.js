@@ -11,12 +11,7 @@ import Home from "routes/Home";
 import Profile from "routes/Profile";
 import Navigation from "components/Navigation";
 
-export default function AppRouter({
-  isLoggedIn,
-  userObj,
-  refreshUser,
-  codeNum,
-}) {
+export default function AppRouter({ isLoggedIn, userObj, refreshUser }) {
   return (
     <div>
       {/* Routes nest inside one another. Nested route paths build upon
@@ -27,18 +22,11 @@ export default function AppRouter({
           {isLoggedIn ? (
             <>
               <Route path="/" element={<Navigation userObj={userObj} />}>
-                <Route
-                  index
-                  element={<Home userObj={userObj} codeNum={codeNum} />}
-                />
+                <Route index element={<Home userObj={userObj} />} />
                 <Route
                   path="profile"
                   element={
-                    <Profile
-                      userObj={userObj}
-                      refreshUser={refreshUser}
-                      codeNum={codeNum}
-                    />
+                    <Profile userObj={userObj} refreshUser={refreshUser} />
                   }
                 />
                 {/* Using path="*"" means "match anything", so this route
