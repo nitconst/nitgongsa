@@ -3,6 +3,8 @@ import GongsaList from "./GongsaList";
 import ExportExcel from "./ExportExcel";
 import axios from "axios";
 import CODE_NUM from "constants/codenum";
+import { getPost } from "apis/api/post";
+import useDidMountEffect from "./useDidmountEffect";
 
 const backUrl = process.env.REACT_APP_BACKEND_URL;
 // 백엔드 주소 + 요청할 디렉토리
@@ -25,8 +27,9 @@ const ReadGongsa = ({ userObj }) => {
     }
   }, []);
 
-  useEffect(() => {
-    setPage(1);
+  // 불필요 useEffect()
+  useDidMountEffect(() => {
+    console.log("dd");
     if (selectedItem === "000") {
       setQueryObject({ id: "0" });
     } else {
@@ -42,45 +45,69 @@ const ReadGongsa = ({ userObj }) => {
       }
     }
   }, [selectedItem]);
+  // useEffect(() => {
+  //   if (selectedItem === "000") {
+  //     setQueryObject({ id: "0" });
+  //   } else {
+  //     if (
+  //       selectedItem === "100" ||
+  //       selectedItem === "200" ||
+  //       selectedItem === "300" ||
+  //       selectedItem === "400"
+  //     ) {
+  //       setQueryObject({ id: "1", regioncode2: selectedItem });
+  //     } else {
+  //       setQueryObject({ id: "2", regioncode: selectedItem });
+  //     }
+  //   }
+  // }, [selectedItem]);
 
   useEffect(() => {
-    if (selectedItem === "000") getGongsaData();
-    else getGongsaDataByRegion();
+    // if (selectedItem === "000") getGongsaData();
+    // else getGongsaDataByRegion();
+    getGongsaData();
   }, [queryObject]);
 
   const getGongsaData = () => {
-    const fetchData = async () => {
+    const fetchData = () => {
       const q = queryObject;
-      await axios.get(backUrl, { params: q }).then((res) => {
-        // console.log(res.data);
-        let items = [];
-        res.data.forEach((doc) => {
-          // console.log(doc);
-          items.push({ key: doc._id, ...doc });
-        });
-        setList(items);
-        // console.log(items);
+
+      // await axios.get(backUrl, { params: q }).then((res) => {
+      //   // console.log(res.data);
+      //   let items = [];
+      //   res.data.forEach((doc) => {
+      //     // console.log(doc);
+      //     items.push({ key: doc._id, ...doc });
+      //   });
+      //   // await getPost(q).then((res) => setList(res));
+      //   //setList(items);
+      //   console.log(items);
+      // });
+
+      // axios 인스턴스 사용
+      getPost(q).then((res) => {
+        setList(res);
       });
     };
+    console.log("dd");
     fetchData();
-    console.log(page);
   };
 
-  const getGongsaDataByRegion = () => {
-    const fetchData = async () => {
-      const q = queryObject;
-      await axios.get(backUrl, { params: q }).then((res) => {
-        // console.log(res.data);
-        let items = [];
-        res.data.forEach((doc) => {
-          items.push({ key: doc._id, ...doc });
-        });
-        setList(items);
-        // console.log(items);
-      });
-    };
-    fetchData();
-  };
+  // const getGongsaDataByRegion = () => {
+  //   const fetchData = async () => {
+  //     const q = queryObject;
+  //     await axios.get(backUrl, { params: q }).then((res) => {
+  //       // console.log(res.data);
+  //       let items = [];
+  //       res.data.forEach((doc) => {
+  //         items.push({ key: doc._id, ...doc });
+  //       });
+  //       setList(items);
+  //     });
+  //   };
+  //   console.log("dd");
+  //   fetchData();
+  // };
 
   const showNext = ({ item }) => {
     if (

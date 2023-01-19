@@ -12,6 +12,8 @@ import loadingAnimationData from "lotties/loading-construction.json";
 import { set } from "react-ga";
 import axios from "axios";
 import CODE_NUM from "constants/codenum";
+import { defaultInstance } from "apis/utils";
+import { postCreate } from "apis/api/post";
 
 Geocode.setApiKey(`${process.env.REACT_APP_GEO_APIKEY}`);
 Geocode.setLanguage("ko");
@@ -87,6 +89,14 @@ const RegisterFactory = ({ userObj }) => {
       // await setDoc(doc(dbService, "gongsa", key), gongsaObj);
       // setGongsa("");
       // setAttachment("");
+
+      // postCreate(gongsaObj)
+      //   .then((response) => {
+      //     console.log(response);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
 
       await axios
         .post(backUrl, gongsaObj)
@@ -269,6 +279,7 @@ const RegisterFactory = ({ userObj }) => {
     Geocode.fromLatLng(String(a), String(b)).then(
       (response) => {
         //대한민국 제외 주소 DB 저장
+        console.log(response);
         setAddress(response.results[0].formatted_address.substr(5));
         let city, state, country;
         // let add = response.results[0].formatted_address;
